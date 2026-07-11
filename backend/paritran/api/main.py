@@ -52,6 +52,7 @@ async def lifespan(app: FastAPI):
     """
     settings = get_settings()
     if settings.RUN_MIGRATIONS_ON_STARTUP:
+        _reject_degenerate_secrets(settings)
         try:
             applied = await asyncio.to_thread(
                 run_migrations, settings.ADMIN_DATABASE_URL, settings.APP_DB_PASSWORD
@@ -59,16 +60,44 @@ async def lifespan(app: FastAPI):
             ensured = await asyncio.to_thread(seed_users, settings)
         except psycopg.OperationalError as exc:
             raise RuntimeError(
-                "startup aborted: database unreachable while running "
-                f"migrations/seed over ADMIN_DATABASE_URL ({type(exc).__name__}). "
-                "Check that the db service is up and the DSN host/port are correct."
+                "startup aborted: database unreachable or authentication failed "
+                f"while running migrations/seed over ADMIN_DATABASE_URL ({type(exc).__name__}: {exc}). "
+                "Check that the db service is up and the DSN host/port are correct. "
+                "If the error names paritran_admin authentication, a pgdata volume "
+                "initialized before the Milestone 2 role split is a known cause: "
+                "recreate it with 'docker compose down -v'."
             ) from exc
         logger.info(
             "startup migrations applied=%s seeded_users=%s", applied, ensured
         )
-        await repo.init_pool(settings.DATABASE_URL)
+    # The pool exists regardless of the migration flag: it is created closed
+    # and opens lazily, so environments without a database are unaffected,
+    # while deployments that migrate externally still get working routers.
+    await repo.init_pool(settings.DATABASE_URL)
     yield
     await repo.close_pool()
+
+
+def _reject_degenerate_secrets(settings) -> None:
+    """Fail startup before a placeholder secret can become a real credential.
+
+    Seeding is insert-only, so an argon2 hash of "CHANGE_ME" or an empty
+    string (compose interpolates missing .env keys to "") would persist as a
+    permanently guessable login. Refusing to boot is the honest failure.
+    """
+    required = {
+        "APP_DB_PASSWORD": settings.APP_DB_PASSWORD,
+        "OFFICER1_PASSWORD": settings.OFFICER1_PASSWORD,
+        "SUPERVISOR1_PASSWORD": settings.SUPERVISOR1_PASSWORD,
+        "AUDITOR1_PASSWORD": settings.AUDITOR1_PASSWORD,
+    }
+    bad = sorted(name for name, value in required.items() if value in ("", "CHANGE_ME"))
+    if bad:
+        raise RuntimeError(
+            "startup aborted: placeholder or empty secrets for "
+            f"{', '.join(bad)}. Run scripts/bootstrap_env.sh (it generates "
+            "real values and adds any keys missing from an existing .env)."
+        )
 
 
 app = FastAPI(

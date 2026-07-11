@@ -28,8 +28,10 @@ import os
 
 # Must run before any test module imports paritran.api or paritran.config,
 # and conftest import precedes test module collection, so this is the spot.
+# APP_DB_PASSWORD deliberately gets NO default: the db fixture refuses to run
+# without an explicit value, because run_migrations may CREATE the app role on
+# a fresh cluster and a silently defaulted password must never reach one.
 os.environ["RUN_MIGRATIONS_ON_STARTUP"] = "false"
-os.environ.setdefault("APP_DB_PASSWORD", "test-only-app-password")
 os.environ.setdefault("OFFICER1_PASSWORD", "test-only-officer1-password")
 os.environ.setdefault("SUPERVISOR1_PASSWORD", "test-only-supervisor1-password")
 os.environ.setdefault("AUDITOR1_PASSWORD", "test-only-auditor1-password")
@@ -117,7 +119,9 @@ def _no_startup_migrations():
     yield
 
 
-TEST_DB_NAME = "paritran_test"
+# Per-process name: two test sessions against one server can never
+# FORCE-drop each other's database mid-run.
+TEST_DB_NAME = f"paritran_test_{os.getpid()}"
 
 
 def _with_dbname(dsn: str, dbname: str) -> str:
@@ -144,7 +148,12 @@ def db():
     reused for every db-marked test in the session.
     """
     admin_dsn = os.environ.get("ADMIN_DATABASE_URL", _DEFAULT_ADMIN_DSN)
-    app_password = os.environ["APP_DB_PASSWORD"]
+    app_password = os.environ.get("APP_DB_PASSWORD")
+    if not app_password:
+        pytest.skip(
+            "APP_DB_PASSWORD not set; db tests require the explicit app-role "
+            "password (never defaulted, see module docstring)"
+        )
 
     try:
         probe = psycopg.connect(admin_dsn, connect_timeout=CONNECT_PROBE_SECONDS)

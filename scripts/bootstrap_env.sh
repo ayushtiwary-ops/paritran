@@ -8,7 +8,38 @@ ENV_FILE="$REPO_ROOT/.env"
 EXAMPLE_FILE="$REPO_ROOT/.env.example"
 
 if [ -f "$ENV_FILE" ]; then
-  echo ".env already exists, leaving it untouched."
+  # Existing values are never modified, but keys that .env.example has and
+  # .env lacks are appended with generated secrets. Without this, an .env
+  # created before a milestone added new keys would feed empty strings into
+  # compose, and the api now refuses to start on placeholder/empty secrets.
+  added=0
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in
+      \#*|"") continue ;;
+    esac
+    key="${line%%=*}"
+    if ! grep -qE "^${key}=" "$ENV_FILE"; then
+      value="${line#*=}"
+      while [[ "$value" == *CHANGE_ME* ]]; do
+        value="${value/CHANGE_ME/$(openssl rand -hex 24)}"
+      done
+      printf '%s=%s\n' "$key" "$value" >> "$ENV_FILE"
+      echo "added missing key: $key"
+      added=1
+    fi
+  done < "$EXAMPLE_FILE"
+  if [ "$added" -eq 1 ]; then
+    # Re-derive the two DSNs only if they were among the appended keys,
+    # so they embed the real role passwords rather than fresh randoms.
+    admin_password="$(grep -E '^POSTGRES_PASSWORD=' "$ENV_FILE" | head -n1 | cut -d= -f2-)"
+    app_password="$(grep -E '^APP_DB_PASSWORD=' "$ENV_FILE" | head -n1 | cut -d= -f2-)"
+    sed -e "s|^ADMIN_DATABASE_URL=postgresql://paritran_admin:[a-f0-9]*@|ADMIN_DATABASE_URL=postgresql://paritran_admin:${admin_password}@|" \
+        "$ENV_FILE" > "$ENV_FILE.tmp" && mv "$ENV_FILE.tmp" "$ENV_FILE"
+    chmod 600 "$ENV_FILE"
+    echo "updated $ENV_FILE with missing keys (existing values untouched)."
+  else
+    echo ".env already exists and has every key, leaving it untouched."
+  fi
   exit 0
 fi
 

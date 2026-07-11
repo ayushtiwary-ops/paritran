@@ -12,10 +12,10 @@ One deterministic core, a fenced language layer. Anything that affects a legal o
 6. **Grounded mapping.** Rule layer, BM25 plus InLegalBERT retrieval over the bare acts, and a grounded model each propose a section; the result comes from agreement, not one model's confidence. Disagreement routes to a human.
 7. **Section 63 packet.** Certificate Part A and Part B pre-filled, integrity hash computed and bound, artefact packaged with its custody trail.
 8. **Groundedness audit (F9).** Every claim, section and citation is checked against source text. Unsupported tokens fail and are withheld. No clause without a source, no source without a clickable citation.
-9. **Officer sign-off.** Assist, not decide. Every acceptance or rejection is written to the immutable log.
+9. **Officer sign-off.** Assist, not decide. Every acceptance or rejection is written to the tamper-evident, append-only audit chain (database-enforced).
 
 ## Data flow and PII containment
-Raw complaint text enters ingest and is hashed immediately. PII lives only inside the branch boundary, encrypted at rest and in transit. The language model runs locally (Ollama, Gemma) with no network egress, so no personal data leaves the premises. The audit log and custody chain are append-only and database-enforced.
+Raw complaint text enters ingest and is hashed immediately. PII lives only inside the branch boundary. Encryption posture, stated honestly: at rest via host full-disk encryption (FileVault on the demo machine, documented for the pilot host), TLS termination documented for the pilot deployment, and the demo runs localhost-only. The language model runs locally (Ollama, Gemma) with no network egress, so no personal data leaves the premises. The audit log and custody chain are append-only and database-enforced; a hash chain is tamper-evident, not immutable, and an attacker privileged enough to rewrite a record and recompute every downstream hash defeats internal verification, which is why the chain head is anchored out of band (on every exported packet, in logs, and as a metric).
 
 ## Non-functionals
 - **Offline first.** Runs air-gapped inside a police station; no internet dependency at inference time.

@@ -162,8 +162,13 @@ CREATE TABLE eval_runs (
 -- audit_log: DB-enforced hash chain, append-only (SPEC 7.2, SPEC 8)
 -- ---------------------------------------------------------------------------
 
+-- seq is assigned exclusively by the hash-chain trigger from this dedicated
+-- sequence, inside the advisory lock: one draw per row, so the ledger shows a
+-- dense sequence (gaps only from aborted transactions), and seq order equals
+-- chain order by construction. An identity column would be assigned BEFORE
+-- the trigger runs and fork the chain under concurrency.
 CREATE TABLE audit_log (
-  seq       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  seq       BIGINT PRIMARY KEY,
   ts        TIMESTAMPTZ NOT NULL DEFAULT now(),
   actor     TEXT NOT NULL,
   action    TEXT NOT NULL,
@@ -171,6 +176,7 @@ CREATE TABLE audit_log (
   prev_hash CHAR(64) NOT NULL,
   hash      CHAR(64) NOT NULL
 );
+CREATE SEQUENCE audit_log_seq OWNED BY audit_log.seq;
 
 -- SPEC 7.2: a forked chain cannot even commit, independent of the advisory lock.
 CREATE UNIQUE INDEX audit_log_prev_hash_key ON audit_log (prev_hash);
@@ -191,10 +197,12 @@ DECLARE
   last_hash CHAR(64);
 BEGIN
   PERFORM pg_advisory_xact_lock(hashtext('audit_log'));
-  -- Identity values are assigned BEFORE this trigger runs, so under concurrency
-  -- seq order could diverge from lock-acquisition (chain) order, forking the
-  -- chain. Reassigning seq inside the lock makes seq order equal chain order.
-  NEW.seq := nextval(pg_get_serial_sequence('audit_log', 'seq'));
+  -- The trigger owns every integrity-bearing column. seq comes from the
+  -- dedicated sequence inside the lock (seq order equals chain order); ts is
+  -- server-assigned so a client cannot backdate or future-date a custody
+  -- entry and have the hash certify the lie; prev_hash never trusts a client.
+  NEW.seq := nextval('audit_log_seq');
+  NEW.ts  := clock_timestamp();
   SELECT hash INTO last_hash FROM audit_log ORDER BY seq DESC LIMIT 1;
   IF last_hash IS NULL THEN
     last_hash := repeat('0', 64);
@@ -216,7 +224,10 @@ CREATE TRIGGER audit_log_hash_chain
   FOR EACH ROW
   EXECUTE FUNCTION audit_log_hash_chain();
 
--- SPEC 7.2: append-only enforcement; even the table owner path hits this trigger.
+-- SPEC 7.2: append-only enforcement. UPDATE, DELETE, and TRUNCATE all hit the
+-- trigger, including the table-owner path. Residual (SPEC 8.4 threat model):
+-- a superuser can still disable triggers; the out-of-band chain-head anchor
+-- is the answer to that class, not this trigger.
 CREATE FUNCTION audit_log_append_only() RETURNS trigger
 LANGUAGE plpgsql
 AS $$
@@ -228,6 +239,11 @@ $$;
 CREATE TRIGGER audit_log_append_only
   BEFORE UPDATE OR DELETE ON audit_log
   FOR EACH ROW
+  EXECUTE FUNCTION audit_log_append_only();
+
+CREATE TRIGGER audit_log_no_truncate
+  BEFORE TRUNCATE ON audit_log
+  FOR EACH STATEMENT
   EXECUTE FUNCTION audit_log_append_only();
 
 -- SPEC 7.2: verify_audit_chain() walks the chain recomputing hashes with the

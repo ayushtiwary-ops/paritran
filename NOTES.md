@@ -46,6 +46,14 @@ Short entries, newest last. This file plus SPEC.md is the durable context across
 31. **Migration SQL ships as setuptools package data.** In-container pytest imports the site-packages wheel; without package data the .sql files exist only in /app and the suite dies on FileNotFoundError while uvicorn (which adds cwd to sys.path) masks the gap.
 32. **The test suite runs on a disposable paritran_test database** created and dropped per session on the same server. Before this, the concurrency hammer left 141 test rows in the live audit ledger, exactly the artefact a judge must never see.
 
+## 2026-07-11 (post adversarial review of Milestone 2, 13 findings, all accepted)
+
+33. **Trigger owns ts too.** A client-writable timestamp meant a backdated INSERT would be hash-certified; the trigger now sets `clock_timestamp()` server-side, mirroring seq and prev_hash. Test added.
+34. **Gapless seq redesign.** Identity column dropped for a trigger-assigned dedicated sequence (one draw per row, inside the lock); the earlier fix burned two sequence values per insert and a judge would see seq 2, 4, 6 in an append-only ledger.
+35. **TRUNCATE closed.** Statement-level BEFORE TRUNCATE trigger added; row triggers do not fire on TRUNCATE, so the owner could previously empty the ledger silently.
+36. **Role bootstrap is create-only.** run_migrations never ALTERs an existing role's password (a pytest run could rotate the live credential mid-demo); CREATE ROLE runs under SET LOCAL log_statement = 'none'. Conftest requires an explicit APP_DB_PASSWORD and uses a per-pid test database name.
+37. **Degenerate-secret guard.** Startup refuses CHANGE_ME or empty seed secrets (insert-only seeding would persist a guessable hash forever); bootstrap_env.sh now appends missing keys to an existing .env. init_pool moved out of the migration flag. SPEC 7.2 amended for seq/ts/SECURITY DEFINER/TRUNCATE so contract and code agree. ARCHITECTURE.md "immutable"/"encrypted" overclaims corrected. Stale M1-era pgdata volumes documented as a known startup-failure cause (fix: docker compose down -v).
+
 ## Mistake ledger (this repo)
 
 - 2026-07-11: SPEC.md first draft contained a stray CJK character ("替") from an editing slip; caught on self-review, fixed. Class: output-hygiene. One instance.

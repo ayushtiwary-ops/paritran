@@ -253,22 +253,25 @@ All engine outputs persist per run so the frontend reads only from the API/DB, n
 ```sql
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE TABLE audit_log (
-  seq        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  ts         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  seq        BIGINT PRIMARY KEY,   -- assigned ONLY by the trigger, inside the lock
+  ts         TIMESTAMPTZ NOT NULL DEFAULT now(),  -- overwritten server-side by the trigger
   actor      TEXT NOT NULL,
   action     TEXT NOT NULL,          -- e.g. link.rejected, packet.assembled, artefact.ingested
   payload    JSONB NOT NULL,
   prev_hash  CHAR(64) NOT NULL,
   hash       CHAR(64) NOT NULL
 );
+CREATE SEQUENCE audit_log_seq OWNED BY audit_log.seq;
 ```
 
-- BEFORE INSERT trigger, concurrency-safe and canonical:
+`seq` is deliberately NOT an identity column: identity values are assigned before BEFORE triggers run, so under concurrent appends seq order could diverge from lock (chain) order and fork the chain. The trigger draws seq from the dedicated sequence inside the advisory lock, one draw per row, so seq order equals chain order by construction and the ledger reads dense (gaps only from aborted transactions).
+
+- BEFORE INSERT trigger, concurrency-safe and canonical, `SECURITY DEFINER` with pinned `search_path` (its nextval and head lookup run with owner rights, so `paritran_app` needs no sequence grant and keeps exactly SELECT and INSERT):
   1. `pg_advisory_xact_lock(hashtext('audit_log'))` first, so appends serialize. Stage completions and officer decisions insert concurrently during the demo; without the lock, two transactions read the same head under READ COMMITTED and fork the chain, making an untampered log fail verification.
-  2. The trigger itself reads the last committed row's `hash` (or 64 zeros) and **sets** `NEW.prev_hash`; it never trusts a client-supplied value.
+  2. The trigger owns every integrity-bearing column: `NEW.seq := nextval('audit_log_seq')`, `NEW.ts := clock_timestamp()` (a client-supplied timestamp must never become a hash-certified custody time; backdating via INSERT is otherwise undetectable), and `NEW.prev_hash` from the last committed row's `hash` (or 64 zeros). No client value is trusted for any of the three.
   3. The preimage is an unambiguous canonical encoding, immune to field-boundary collisions and to session GUCs (`timestamptz::text` varies with TimeZone/DateStyle, so `ts` enters as epoch): `NEW.hash = encode(digest(jsonb_build_object('prev', NEW.prev_hash, 'actor', NEW.actor, 'action', NEW.action, 'payload', NEW.payload, 'ts_epoch', extract(epoch from NEW.ts)::text)::text, 'sha256'), 'hex')`. (jsonb text output is deterministic for a given jsonb value.)
 - `CREATE UNIQUE INDEX ON audit_log(prev_hash)`: a forked chain cannot even commit, independent of the lock.
-- BEFORE UPDATE OR DELETE trigger: `RAISE EXCEPTION 'audit_log is append-only'`.
+- BEFORE UPDATE OR DELETE trigger (each row) plus a BEFORE TRUNCATE trigger (each statement): `RAISE EXCEPTION 'audit_log is append-only'`. TRUNCATE fires no row triggers, so without the statement trigger the owner could silently empty the ledger.
 - `REVOKE UPDATE, DELETE ON audit_log FROM paritran_app;` plus RLS enabled with INSERT/SELECT policies only. Defense in depth: even the table owner path hits the trigger.
 - `verify_audit_chain()` walks the chain recomputing hashes; exposed at `GET /api/audit/verify`.
 

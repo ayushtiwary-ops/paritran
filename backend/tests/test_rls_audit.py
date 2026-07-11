@@ -109,3 +109,52 @@ def test_client_supplied_prev_hash_is_overwritten(db):
         assert stored_prev == expected_prev
         assert stored_hash != bogus
         assert conn.execute("SELECT verify_audit_chain()").fetchone()[0] is None
+
+
+def test_client_supplied_ts_is_overwritten(db):
+    """A backdated INSERT must not become a certified custody timestamp.
+
+    The trigger assigns ts server-side (clock_timestamp), mirroring its
+    treatment of seq and prev_hash, so the hash can never certify a
+    client-fabricated time.
+    """
+    bogus = "2020-01-01T00:00:00+00:00"
+    with db.app() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO audit_log (actor, action, payload, ts)"
+                " VALUES (%s, %s, %s, %s) RETURNING ts",
+                ("pytest-rls", "test.rls.backdate", Jsonb({}), bogus),
+            )
+            stored_ts = cur.fetchone()[0]
+        conn.commit()
+    assert stored_ts.year >= 2026, f"backdated ts was stored: {stored_ts}"
+    with db.admin() as conn:
+        assert conn.execute("SELECT verify_audit_chain()").fetchone()[0] is None
+
+
+def test_owner_truncate_rejected(db):
+    """TRUNCATE fires no row triggers; the statement-level trigger closes it."""
+    with db.admin() as conn:
+        with pytest.raises(psycopg.errors.RaiseException):
+            conn.execute("TRUNCATE audit_log")
+        conn.rollback()
+
+
+def test_rls_actually_enabled_with_expected_policies(db):
+    """The milestone claims RLS proven in test; assert RLS itself, not just
+    the REVOKE or the trigger, so a later DISABLE ROW LEVEL SECURITY cannot
+    pass silently."""
+    with db.admin() as conn:
+        relrowsecurity = conn.execute(
+            "SELECT relrowsecurity FROM pg_class WHERE relname = 'audit_log'"
+        ).fetchone()[0]
+        policies = conn.execute(
+            "SELECT polname, cmd FROM ("
+            "  SELECT polname, CASE polcmd WHEN 'r' THEN 'SELECT' WHEN 'a' THEN 'INSERT'"
+            "         ELSE polcmd::text END AS cmd"
+            "  FROM pg_policy JOIN pg_class ON pg_policy.polrelid = pg_class.oid"
+            "  WHERE relname = 'audit_log') p ORDER BY cmd"
+        ).fetchall()
+    assert relrowsecurity is True
+    assert [cmd for _, cmd in policies] == ["INSERT", "SELECT"]

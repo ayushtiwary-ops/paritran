@@ -4,11 +4,17 @@ Runs synchronously over ADMIN_DATABASE_URL: it executes once at api
 startup (the lifespan wraps it in ``asyncio.to_thread``) and DDL over a
 pool buys nothing. Sequence per run:
 
-1. Ensure the ``paritran_app`` LOGIN role exists and set its password.
-   This happens BEFORE any migration applies because 001_schema.sql
-   GRANTs to that role. All role SQL is built with ``psycopg.sql``
-   composition; the password is never interpolated via string
-   formatting and never logged.
+1. Ensure the ``paritran_app`` LOGIN role exists. This happens BEFORE
+   any migration applies because 001_schema.sql GRANTs to that role.
+   Create-only: an existing role's password is NEVER altered, so a test
+   session or second deployment pointing at the same cluster can never
+   rotate the live credential out from under a running api. All role
+   SQL is built with ``psycopg.sql`` composition; the password never
+   passes through string formatting and is never logged by this
+   application. Server-side, the one CREATE ROLE statement runs under
+   ``SET LOCAL log_statement = 'none'`` so later enabling DDL logging
+   does not capture it; the brief pg_stat_activity visibility of that
+   single statement is the documented residual.
 2. Ensure the ``schema_migrations`` bookkeeping table.
 3. Apply pending ``*.sql`` files in lexical order, each inside its own
    transaction together with its bookkeeping row.
@@ -41,26 +47,25 @@ class MigrationChecksumError(RuntimeError):
 
 
 def _ensure_app_role(conn: psycopg.Connection, password: str) -> None:
-    """Create paritran_app if absent, then set its password every run.
+    """Create paritran_app if absent. Never alters an existing role.
 
-    Uses psycopg.sql composition (sql.Literal) because CREATE/ALTER ROLE
-    cannot take server-side bind parameters. The password value never
-    passes through str.format, f-strings, or logging.
+    Create-only by design: rotating the live application credential is
+    an explicit admin action, never a side effect of running migrations.
+
+    Uses psycopg.sql composition (sql.Literal) because CREATE ROLE
+    cannot take server-side bind parameters. SET LOCAL log_statement
+    keeps the statement out of server logs even under DDL logging.
     """
     row = conn.execute(
         "SELECT 1 FROM pg_roles WHERE rolname = %s", (APP_ROLE,)
     ).fetchone()
     if row is None:
+        conn.execute("SET LOCAL log_statement = 'none'")
         conn.execute(
             sql.SQL("CREATE ROLE {} LOGIN PASSWORD {}").format(
                 sql.Identifier(APP_ROLE), sql.Literal(password)
             )
         )
-    conn.execute(
-        sql.SQL("ALTER ROLE {} WITH LOGIN PASSWORD {}").format(
-            sql.Identifier(APP_ROLE), sql.Literal(password)
-        )
-    )
 
 
 def run_migrations(
