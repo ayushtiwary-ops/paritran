@@ -115,7 +115,8 @@ for c in complaints:
 pct_traced = round(100 * traced_val / total_val, 1)
 
 # ----------------------------------------------------------------------------
-# 5. Grounded legal mapping  -- REAL BM25 retrieval over bare-act text
+# 5. Grounded legal mapping  -- REAL BM25 retrieval over condensed section
+#    descriptions (corpus v1; NOT verbatim statute text)
 #    (TODO: add InLegalBERT semantic reranking + rule-layer agreement)
 # ----------------------------------------------------------------------------
 CORPUS = {
@@ -144,7 +145,7 @@ def bm25(q, dk, k1=1.5, b=0.75):
 def map_sections(text, topn=2, thresh=0.8):
     q = tok(text); ranked = sorted(((bm25(q, k), k) for k in docs), reverse=True)
     return [k for sc, k in ranked[:topn] if sc >= thresh] or [ranked[0][1]]
-LABELLED = [   # untuned natural-language complaints (do NOT reuse statute wording)
+LABELLED = [   # untuned natural-language complaints (do NOT reuse corpus wording)
  ("A caller claiming to be from the bank made her share the one time code, then emptied the account", {"IT Act 66C","BNS 318"}),
  ("He set up a fake trading application and lured victims to deposit money", {"IT Act 66D","BNS 318"}),
  ("Someone used my stolen credentials to authorise a payment", {"IT Act 66C"}),
@@ -173,7 +174,9 @@ section_acc = round(100 * hits / len(LABELLED), 1)
 # ----------------------------------------------------------------------------
 # 6. F9 groundedness gate  -- REAL, over a generative step that also fabricates
 #    Gate rule: a claim passes iff its cited section exists AND its quote is a
-#    verbatim substring of that bare act. Catches paraphrase and invention.
+#    verbatim substring of that section's corpus text. Catches paraphrase and
+#    invention. The stub fabricates on purpose (ground-truth labelled below),
+#    so the gate is exercised non-tautologically.
 # ----------------------------------------------------------------------------
 def gate(sec, quote): return sec in CORPUS and quote.strip().lower() in CORPUS[sec].lower()
 def mock_generate():                 # TODO: replace with Gemma via Ollama
@@ -182,18 +185,18 @@ def mock_generate():                 # TODO: replace with Gemma via Ollama
             "IT Act 66C":"unique identification feature",
             "IT Act 66D":"using any communication device or computer resource",
             "BNS 111":"continuing unlawful activity by a crime syndicate"}
-    secs, out = list(real), []
+    secs, out = list(real), []       # each claim: (section, quote, fabricated)
     for i in range(50):
         sec = secs[i % len(secs)]
-        if i % 5 == 0:               # the model hallucinates ~1 in 5
-            out.append(("BNS 420", "whoever commits cyber fraud") if i % 10 == 0
-                       else (sec, "the accused clearly intended to defraud the victim"))
+        if i % 5 == 0:               # the stub fabricates ~1 in 5, ground-truth labelled
+            out.append(("BNS 420", "whoever commits cyber fraud", True) if i % 10 == 0
+                       else (sec, "the accused clearly intended to defraud the victim", True))
         else:
-            out.append((sec, real[sec]))
+            out.append((sec, real[sec], False))
     return out
 claims   = mock_generate()
-withheld = [c for c in claims if not gate(*c)]
-passed   = [c for c in claims if gate(*c)]
+withheld = [c for c in claims if not gate(c[0], c[1])]
+passed   = [c for c in claims if gate(c[0], c[1])]
 
 # ----------------------------------------------------------------------------
 # 7. SHA-256 hash-chained chain of custody  -- real, tamper-tested
@@ -224,9 +227,9 @@ results = {
  "n_complaints": len(complaints), "n_syndicates_seeded": N_SYND, "networks_found": networks_found,
  "linkage_precision": round(precision, 3), "linkage_recall": round(recall, 3), "linkage_f1": round(f1, 3),
  "pct_value_traced_to_cashout": pct_traced, "money_trail_method": "directed-graph reachability",
- "section_accuracy_bm25": section_acc, "section_method": "Okapi BM25 over bare-act corpus (InLegalBERT rerank TODO)",
- "f9_claims": len(claims), "f9_passed": len(passed), "f9_withheld_real_hallucinations": len(withheld),
- "f9_leaked": sum(1 for c in withheld if gate(*c)),
+ "section_accuracy_bm25": section_acc, "section_method": "Okapi BM25 over condensed section-description corpus (v1)",
+ "f9_claims": len(claims), "f9_passed": len(passed), "f9_withheld_stub_fabrications": len(withheld),
+ "f9_leaked": sum(1 for sec, quote, fabricated in claims if fabricated and gate(sec, quote)),
  "chain_len": len(chain), "chain_verified": chain_ok, "tamper_detected": tamper_detected,
  "time_to_packet_sec": round(time.time() - t0, 3),
  "data": "synthetic, ground-truth known, zero real PII", "seed": 42,

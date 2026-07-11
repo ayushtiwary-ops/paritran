@@ -8,15 +8,15 @@
   "pct_value_traced_to_cashout": 90.8,
   "money_trail_method": "directed-graph reachability",
   "section_accuracy_bm25": 52.4,
-  "section_method": "Okapi BM25 over bare-act corpus (InLegalBERT rerank TODO)",
+  "section_method": "Okapi BM25 over condensed section-description corpus (v1)",
   "f9_claims": 50,
   "f9_passed": 40,
-  "f9_withheld_real_hallucinations": 10,
+  "f9_withheld_stub_fabrications": 10,
   "f9_leaked": 0,
   "chain_len": 12,
   "chain_verified": true,
   "tamper_detected": true,
-  "time_to_packet_sec": 0.048,
+  "time_to_packet_sec": 0.044,
   "data": "synthetic, ground-truth known, zero real PII",
   "seed": 42
 }

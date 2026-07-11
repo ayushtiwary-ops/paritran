@@ -1,0 +1,39 @@
+# Paritran API image (SPEC sections 2, 3, 12).
+#
+# Build context is the repo's backend/ directory. Expected compose wiring:
+#   build:
+#     context: ./backend
+#     dockerfile: ../infra/docker/Dockerfile.api
+#
+# The container listens on 8000 (published to host 8090 by compose).
+# The InLegalBERT snapshot is bind-mounted read-only by compose from
+# INLEGALBERT_HOST_DIR to /models/InLegalBERT; it is not baked in here.
+
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN groupadd --gid 10001 paritran \
+    && useradd --uid 10001 --gid paritran --create-home --shell /usr/sbin/nologin paritran
+
+WORKDIR /app
+
+# Dev requirements are installed too because SPEC section 17 step 3 runs
+# `docker compose exec api pytest -q` inside this container.
+COPY requirements.txt requirements-dev.txt ./
+RUN pip install --no-cache-dir -r requirements.txt -r requirements-dev.txt
+
+COPY . .
+RUN pip install --no-cache-dir --no-deps .
+
+USER paritran
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD ["python", "-c", "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health', timeout=4).status == 200 else 1)"]
+
+CMD ["uvicorn", "paritran.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

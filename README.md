@@ -25,12 +25,18 @@ Run `python3 src/paritran_prototype.py`. Every number below is written to `resul
 | Mule networks recovered | 6 of 6 seeded, from 297 complaints | greedy modularity community detection |
 | Linkage precision / recall / F1 | 0.957 / 0.966 / 0.962 | pairwise agreement vs ground truth |
 | Value traced to cash-out | 90.8 percent | directed-graph reachability (real trace) |
-| Section mapping accuracy | 52.4 percent | Okapi BM25 over the bare acts, untuned set |
-| Groundedness gate (F9) | 40 passed, 10 real hallucinations withheld, 0 leaked | verbatim-citation gate over a generative step |
+| Section mapping accuracy | 52.4 percent | Okapi BM25 over the condensed section-description corpus (v1), untuned set |
+| Groundedness gate (F9) | 40 passed, 10 stub fabrications withheld, 0 leaked | verbatim-citation gate over a fabricating generative step (deterministic stub) |
 | Chain of custody | 12 records verified, tamper detected | SHA-256 hash chain |
 | Time to packet | 0.048 s for 297 complaints | end to end |
 
-**On the 52.4 percent.** That is BM25 lexical retrieval alone on a deliberately untuned, natural-language test set. It is the honest floor, and it is the argument for the semantic layer: adding InLegalBERT embeddings and requiring the rule and retrieval paths to agree is the documented lift (see `src/paritran_prototype.py`, Section 5 `TODO`). We report the method, not a keyword score tuned to pass.
+**On the 52.4 percent.** That is BM25 lexical retrieval alone, over the condensed v1 corpus, on a deliberately untuned, natural-language test set. It is the honest floor, and it is the argument for the semantic layer: adding InLegalBERT embeddings and requiring the rule and retrieval paths to agree is the documented lift (see `src/paritran_prototype.py`, Section 5 `TODO`). We report the method, not a keyword score tuned to pass.
+
+---
+
+## Post-submission corrections
+
+The submitted PDF's Appendix A contained three placeholder computations; they have since been replaced with the real methods and re-measured, and `docs/CHANGELOG_POST_SUBMISSION.md` states the old and new numbers side by side.
 
 ---
 

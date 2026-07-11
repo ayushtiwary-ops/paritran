@@ -45,10 +45,10 @@ Services (docker compose):
 
 | Service | Image / build | Port (host) | Role |
 |---|---|---|---|
-| `db` | postgres:16 (alpine) | 5433 -> 5432 | Data + DB-enforced hash-chained audit log |
-| `api` | `backend/` (python:3.11-slim) | 8000 | FastAPI, engine, SSE, auth, eval harness |
-| `web` | `frontend/` (nginx serving Vite build) | 8080 | React app, fonts and assets vendored |
-| `prometheus` | prom/prometheus | 9090 | Scrapes `api /metrics` |
+| `db` | postgres:16 (alpine) | none (core network only; psql via `docker compose exec db`) | Data + DB-enforced hash-chained audit log |
+| `api` | `backend/` (python:3.11-slim) | 8090 -> 8000 | FastAPI, engine, SSE, auth, eval harness |
+| `web` | `frontend/` (nginx serving Vite build) | 8081 -> 80 | React app, fonts and assets vendored |
+| `prometheus` | prom/prometheus | none (core network only; judges see Grafana) | Scrapes `api /metrics` |
 | `grafana` | grafana/grafana | 3001 -> 3000 | Provisioned dashboard |
 | (host) | Ollama, native macOS | 11434 | `gemma3:4b`, reached at `host.docker.internal:11434` |
 
@@ -410,7 +410,7 @@ Frontend: vitest for lib + components (SSE reducer, counters bind only to event 
 # 1. Clean bring-up (no internet needed once bundle is loaded)
 ./scripts/bootstrap_env.sh && docker compose up -d --wait
 # 2. Health
-curl -sf localhost:8000/health | jq .   # every component "ok"
+curl -sf localhost:8090/health | jq .   # every component "ok"
 # 3. Backend tests + metric gate
 docker compose exec api pytest -q       # all green, includes 6.1 exact equality
 # 4. Frontend tests
@@ -469,7 +469,7 @@ Each milestone ends with an adversarial review subagent in a fresh context check
 | Ollama down or slow on stage | Stub fallback behind identical interface, labelled; demo rehearsed both ways; preflight script checks `ollama list` |
 | InLegalBERT load failure | Model files verified by `/ready`; bundle carries the snapshot; BM25+rules degrade path with mandatory review flag |
 | Docker cold-start at venue | `bundle_save.sh`/`bundle_load.sh` pre-load images; `demo_preflight.sh` boots and smoke-tests everything in one command |
-| Port conflicts on demo Mac | Non-default host ports (5433, 3001); preflight checks |
+| Port conflicts on demo Mac | Host ports chosen against a live scan of this machine (8090 api, 8081 web, 5433 db, 9090 prometheus, 3001 grafana; 8000/8080/8001 are occupied by OrbStack and a local python service); preflight re-checks |
 | RNG drift breaking baselines | Draw-order lock test; networkx pinned; Python pinned 3.11 |
 | Judge asks "is any number canned?" | Judge's-seed rerun (no canned value survives an arbitrary seed), Reproduce button, spot-check grep in CI by exit code, standalone runnable prototype |
 | Judge diffs the app numbers against the submitted Appendix A | `docs/CHANGELOG_POST_SUBMISSION.md` owns the correction, old vs new side by side; one rehearsed sentence in the Q&A pack |

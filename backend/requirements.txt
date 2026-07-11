@@ -1,0 +1,8 @@
+# Paritran API runtime dependencies (SPEC section 3: fully pinned).
+# Every version below was verified to exist on PyPI via `pip index versions` on 2026-07-11.
+fastapi==0.139.0
+uvicorn[standard]==0.51.0
+pydantic-settings==2.14.2
+psycopg[binary]==3.3.4
+prometheus-fastapi-instrumentator==8.0.2
+httpx==0.28.1

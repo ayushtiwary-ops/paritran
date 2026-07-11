@@ -1,0 +1,43 @@
+/*
+ * Paritran design tokens (SPEC section 10.1, exact palette).
+ * Color semantics: navy = deterministic core, teal = language layer,
+ * oxblood = audit gate and warnings, forest = human-in-the-loop and positive,
+ * gold = highlight, steel = structural surfaces on navy, muted = secondary
+ * text and unknown states, surface = light text and light backgrounds.
+ * Fonts are self-hosted via @fontsource (imported in src/main.tsx). No CDN.
+ */
+
+:root {
+  /* Palette (exact hex values, SPEC 10.1) */
+  --color-navy: #0A1F44;
+  --color-steel: #1E3A6B;
+  --color-teal: #2E7273;
+  --color-gold: #A87229;
+  --color-oxblood: #7A2E2E;
+  --color-forest: #2D6A4F;
+  --color-muted: #87847A;
+  --color-surface: #FBFAF6;
+
+  /* Font stacks wired to the three IBM Plex families */
+  --font-sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-navy);
+  color: var(--color-surface);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}

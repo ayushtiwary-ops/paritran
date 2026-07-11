@@ -1,0 +1,26 @@
+{
+  "name": "paritran-web",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Paritran frontend. Milestone 1 shell; hero screens land in Milestone 6.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "5.2.7",
+    "@fontsource/ibm-plex-sans": "5.2.8",
+    "@fontsource/ibm-plex-serif": "5.2.7",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "@vitejs/plugin-react": "4.7.0",
+    "typescript": "5.6.3",
+    "vite": "7.3.6"
+  }
+}

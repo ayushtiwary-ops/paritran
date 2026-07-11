@@ -1,0 +1,66 @@
+# CI (SPEC section 11): tests, truth-rule spot-check, dependency audit, secret scan.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install backend dependencies
+        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+      - name: Run backend tests
+        run: |
+          cd backend
+          python -m pytest -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+  truth-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Truth-rule spot-check (SPEC section 17 step 5, exit code is the verdict)
+        run: |
+          ! grep -rInE "0\.957|0\.966|0\.962|90\.8|52\.4|\b297\b|40 ?/ ?10|tamper_detected" frontend/src
+
+  pip-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Audit backend dependencies
+        run: |
+          pip install pip-audit==2.9.0
+          pip-audit -r backend/requirements.txt
+
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# Trivy, Grype, Semgrep, Bandit land in Milestone 7 per SPEC section 11.

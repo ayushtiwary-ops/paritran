@@ -1,20 +1,92 @@
-# On-premise, zero-egress bundle (Phase 2 branch pilot shape).
-# The reproducible slice runs with just the `prototype` service.
+# On-premise, zero-egress stack (SPEC section 2): the only configured outbound endpoint is host-local Ollama.
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: paritran_app
+      POSTGRES_DB: paritran
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paritran_app -d paritran"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    networks:
+      - core
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: ../infra/docker/Dockerfile.api
+    env_file: .env
+    environment:
+      # Derived from POSTGRES_PASSWORD so api and db can never disagree on the credential.
+      DATABASE_URL: postgresql://paritran_app:${POSTGRES_PASSWORD}@db:5432/paritran
+    volumes:
+      - ${INLEGALBERT_HOST_DIR}:/models/InLegalBERT:ro
+    networks:
+      - core
+      - edge
+    ports:
+      - "8090:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.web
+    networks:
+      - edge
+    ports:
+      - "8081:80"
+    depends_on:
+      - api
+
+  prometheus:
+    image: prom/prometheus:v3.4.1
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - core
+
+  grafana:
+    image: grafana/grafana:11.6.1
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - core
+      - edge
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+
+  # Judge-verifiable slice: docker compose --profile slice up prototype
   prototype:
     build: .
     container_name: paritran_prototype
     command: python src/paritran_prototype.py
+    profiles: ["slice"]
 
-  # --- Full on-prem stack (enable for the branch pilot) ---
-  # api:      # FastAPI application layer
-  #   build: .
-  #   ports: ["8000:8000"]
-  #   depends_on: [db, ollama]
-  # db:       # PostgreSQL with database-enforced SHA-256 hash chain
-  #   image: postgres:16
-  #   environment: { POSTGRES_PASSWORD: paritran }
-  # ollama:   # local Gemma, no network egress
-  #   image: ollama/ollama:latest
-  #   volumes: ["ollama:/root/.ollama"]
-# volumes: { ollama: {} }
+networks:
+  core:
+    internal: true
+  edge:
+    driver: bridge
+
+volumes:
+  pgdata:

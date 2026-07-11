@@ -13,7 +13,7 @@ Short entries, newest last. This file plus SPEC.md is the durable context across
 7. **Tamper test runs on a scratch copy.** The real DB chain is append-only and stays intact; the test corrupts a clone and shows verification catching it. Stronger claim, zero self-harm. Running the test is itself audited.
 8. **SSE only, no WebSockets.** One-way feeds cover every requirement; multi-investigator collab is a non-goal.
 9. **Plain SQL migrations over Alembic.** Fewer moving parts, fully auditable by a police IT reviewer; applied idempotently at API startup.
-10. **Host ports 5433 (db), 3001 (grafana), 8080 (web)** to dodge common local conflicts on the demo Mac.
+10. **Host ports scanned live on the demo Mac (Milestone 1):** 8090 api, 8081 web, 5433 db, 9090 prometheus, 3001 grafana. 8000 is held by OrbStack itself and 8080/8001 by a local python service, so the originally drafted 8000/8080 were replaced before any code depended on them.
 11. **Fonts self-hosted via @fontsource.** No CDN at runtime; offline bundle stays truly offline.
 12. **Prototype is read-only.** `src/paritran_prototype.py` is the judge-verifiable appendix artifact; the app engine is a promoted copy under `backend/paritran/engine/` with the RNG contract test guaranteeing equivalence.
 13. **Security scans run offline at the venue** from pre-fetched DBs (Trivy/Grype); posture panel shows real artifacts and honest last-scan timestamps. TLS/at-rest posture stated honestly (localhost demo, documented pilot path), no overclaims on the panel.
@@ -29,6 +29,14 @@ Short entries, newest last. This file plus SPEC.md is the durable context across
 20. **"Judge's seed" control added.** Rerun with any seed a judge names; the strongest possible answer to "is any number canned". The frontend grep is downgraded to a spot-check and made exit-code effective in CI.
 21. **Hash-chain threat model scoped honestly.** A privileged attacker who re-chains defeats internal verification; we say so, and anchor the chain head out of band (on every exported packet, in logs, as a Prometheus metric).
 22. **OCR ingest specified, not dropped.** `POST /api/intake/artefact` (pdfplumber + Tesseract) with bundled synthetic samples, test, and milestone evidence; master prompt mandated the stack.
+
+## 2026-07-11 (Milestone 1 integration)
+
+23. **api image builds from context ./backend** with dockerfile ../infra/docker/Dockerfile.api; web builds from repo root (it needs frontend/ plus infra/docker/nginx.conf). Root .dockerignore and backend/.dockerignore keep node_modules, .git, and .env out of build contexts.
+24. **db and prometheus publish no host ports.** core is internal: true, so publishing there is impossible anyway; judges see Grafana (3001), psql goes through docker compose exec. SPEC table updated to match.
+25. **Vite 7.3.6, not 5.x** (frontend agent's call, ratified): vite <= 6.4.2 pulls an esbuild with GHSA-67mh-4wv8-2f99 and fails the npm audit gate; with 7.3.6 npm audit reports 0 vulnerabilities.
+26. **OrbStack daemon wedged mid-milestone** (docker version timing out) after parallel builds plus a read-only-mount nginx test container; orbctl stop/start recovered it. Demo-day runbook gets a "docker daemon unresponsive" remediation line.
+27. **Bootstrap credentials** print once and were stashed to the session scratchpad, not the repo. .env is chmod 600 and gitignored.
 
 ## Mistake ledger (this repo)
 

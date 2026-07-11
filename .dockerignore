@@ -1,0 +1,9 @@
+.git
+.env
+**/node_modules
+frontend/dist
+**/__pycache__
+**/.pytest_cache
+**/.venv
+backend/paritran.egg-info
+.DS_Store

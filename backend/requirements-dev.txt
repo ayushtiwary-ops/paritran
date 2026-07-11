@@ -1,0 +1,4 @@
+# Paritran API development and test dependencies (fully pinned).
+# Every version below was verified to exist on PyPI via `pip index versions` on 2026-07-11.
+pytest==9.1.1
+pytest-asyncio==1.4.0

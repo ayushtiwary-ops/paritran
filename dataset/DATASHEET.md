@@ -10,14 +10,14 @@ Following the "Datasheets for Datasets" framework (Gebru et al., 2021). This doc
 - **Instances.** About 297 synthetic complaints per run (seed 42), each with a complaint id, a true syndicate label, a set of identifiers (phones, devices, IPs, mule accounts), a victim amount, and an associated first-layer mule.
 - **Seeded structure.** 6 ground-truth syndicates, each with layer-1 and layer-2 mule accounts and a cash-out node, plus about 40 legitimate unrelated noise complaints.
 - **Realism controls.** About 6 percent cross-syndicate identifier bleed to create genuine false-merge pressure; a deliberately incomplete money ledger (about 93 percent edge completeness) so the money-trail trace has to cope with gaps.
-- **Labels.** Ground-truth syndicate membership per complaint; a 21-case labelled set for section mapping with natural-language complaints that do not reuse statute wording.
+- **Labels.** Ground-truth syndicate membership per complaint; a 21-case labelled set for section mapping with natural-language complaints that do not reuse the corpus wording.
 
 ## Collection process
 - **Generator.** `src/paritran_prototype.py`, Section 1, using Python `random` with `seed=42`. Fully deterministic and reproducible.
 - **No third parties, no scraping, no real records.** Every field is generated.
 
 ## Preprocessing, cleaning, labelling
-- Identifiers are generated already normalised. Ground-truth labels are assigned at generation time, so evaluation is exact. The section-mapping test set is hand-written to be semantically realistic and lexically distinct from the bare-act text, to avoid inflating retrieval accuracy.
+- Identifiers are generated already normalised. Ground-truth labels are assigned at generation time, so evaluation is exact. The section-mapping test set is hand-written to be semantically realistic and lexically distinct from the corpus text (condensed section descriptions, corpus v1), to avoid inflating retrieval accuracy.
 
 ## Uses
 - **Intended.** Benchmarking the Paritran pipeline components and demonstrating reproducibility to evaluators.
