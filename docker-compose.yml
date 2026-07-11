@@ -1,0 +1,20 @@
+# On-premise, zero-egress bundle (Phase 2 branch pilot shape).
+# The reproducible slice runs with just the `prototype` service.
+services:
+  prototype:
+    build: .
+    container_name: paritran_prototype
+    command: python src/paritran_prototype.py
+
+  # --- Full on-prem stack (enable for the branch pilot) ---
+  # api:      # FastAPI application layer
+  #   build: .
+  #   ports: ["8000:8000"]
+  #   depends_on: [db, ollama]
+  # db:       # PostgreSQL with database-enforced SHA-256 hash chain
+  #   image: postgres:16
+  #   environment: { POSTGRES_PASSWORD: paritran }
+  # ollama:   # local Gemma, no network egress
+  #   image: ollama/ollama:latest
+  #   volumes: ["ollama:/root/.ollama"]
+# volumes: { ollama: {} }
