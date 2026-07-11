@@ -1,6 +1,0 @@
-Metadata-Version: 2.4
-Name: paritran
-Version: 0.1.0
-Summary: Paritran backend. On-premise, zero-egress court-admissibility engine for the Cyber Crime Branch.
-License: MIT
-Requires-Python: >=3.11

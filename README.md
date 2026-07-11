@@ -2,7 +2,7 @@
 
 ### From complaint to conviction.
 
-An admissible-evidence engine for the Cyber Crime Branch. Paritran runs inside the branch, links related complaints into mule networks, reconstructs the money trail with a tamper-evident chain of custody, drafts the Section 63 certificate, and maps each offence to the right law with the statute quoted word for word. Every output passes a groundedness gate that refuses anything it cannot trace to a source. The officer reviews and signs. The engine never decides on its own.
+An admissible-evidence engine for the Cyber Crime Branch. Paritran runs inside the branch, links related complaints into mule networks, reconstructs the money trail with a tamper-evident chain of custody, drafts the Section 63 certificate, and maps each offence to the right law with the statute quoted word for word. Every output passes a groundedness gate that refuses anything it cannot trace to a source. The officer reviews and signs. The engine never decides on its own. That describes the target system, specified in `SPEC.md` and built milestone by milestone; the measured slice below implements linkage, the money trail, the BM25 mapping floor, the F9 gate, and custody today, with certificate drafting and verbatim statute quoting (corpus v2) landing per the SPEC milestones.
 
 **Status:** working prototype slice, measured on synthetic data. **Data:** synthetic only, ground truth known, zero real PII. **Deployment:** on-premise, zero egress. **Seed:** 42, fully reproducible.
 
@@ -28,7 +28,7 @@ Run `python3 src/paritran_prototype.py`. Every number below is written to `resul
 | Section mapping accuracy | 52.4 percent | Okapi BM25 over the condensed section-description corpus (v1), untuned set |
 | Groundedness gate (F9) | 40 passed, 10 stub fabrications withheld, 0 leaked | verbatim-citation gate over a fabricating generative step (deterministic stub) |
 | Chain of custody | 12 records verified, tamper detected | SHA-256 hash chain |
-| Time to packet | 0.048 s for 297 complaints | end to end |
+| Time to packet | ~0.05 s for 297 complaints | end to end, wall clock: measured live each run, never baseline-compared |
 
 **On the 52.4 percent.** That is BM25 lexical retrieval alone, over the condensed v1 corpus, on a deliberately untuned, natural-language test set. It is the honest floor, and it is the argument for the semantic layer: adding InLegalBERT embeddings and requiring the rule and retrieval paths to agree is the documented lift (see `src/paritran_prototype.py`, Section 5 `TODO`). We report the method, not a keyword score tuned to pass.
 
@@ -69,10 +69,14 @@ ingest (hashed) -> entity resolution -> linkage graph -> money trail
 
 ```
 paritran_repo/
-  src/paritran_prototype.py   the measured pipeline (this is the appendix code, corrected)
+  SPEC.md                     the build contract; NOTES.md, the decision log
+  src/paritran_prototype.py   the measured pipeline (the appendix code, corrected)
   results.json                regenerated on every run, seed 42
+  backend/                    FastAPI application and engine (built per SPEC milestones)
+  frontend/                   React + TypeScript officer interface
+  infra/, scripts/            Docker, nginx, Prometheus, Grafana, CI, bootstrap
   dataset/DATASHEET.md        dataset documentation (synthetic generator)
-  docs/ARCHITECTURE.md        system design, data flow, non-functionals
+  docs/ARCHITECTURE.md        system design; docs/CHANGELOG_POST_SUBMISSION.md
   Dockerfile, docker-compose.yml, run.sh   on-prem, zero-egress bundle
   requirements.txt            core plus the full-stack dependencies
   LICENSE                     evaluation license

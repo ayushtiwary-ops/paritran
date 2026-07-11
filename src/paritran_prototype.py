@@ -1,13 +1,14 @@
 """
 Paritran prototype slice  (synthetic data only, zero real PII).
 
-Pipeline, every stage a REAL computation (no placeholders):
+Pipeline, every measured metric a REAL computation (the generative step is a
+labelled deterministic stub, see NOTE below):
   synthetic complaints
     -> entity resolution -> linkage graph
     -> community detection (mule networks)              [networkx]
     -> money-trail reconstruction (graph reachability)  [real trace]
     -> grounded legal mapping (BM25 retrieval)          [real retrieval]
-    -> F9 groundedness gate over a generative step      [real, non-tautological]
+    -> F9 groundedness gate over a generative step      [real gate, stub generator]
     -> SHA-256 hash-chained chain of custody            [real, tamper-tested]
 
 Outputs measured, reproducible metrics to results.json.
@@ -16,8 +17,9 @@ Fixed seed. Reproduce:  python3 paritran_prototype.py
 NOTE ON THE MODEL LAYER
   In production the generator is a local LLM (Gemma via Ollama, zero egress) and
   the retriever is BM25 + InLegalBERT embeddings. Here the generator is a
-  transparent stub that also fabricates, so the F9 gate is exercised against a
-  real adversary rather than a self-comparison. Swap-in points are marked TODO.
+  transparent deterministic stub that fabricates on purpose (ground-truth
+  labelled), so the F9 gate is exercised against known fabrications rather than
+  a self-comparison. Swap-in points are marked TODO.
 """
 import random, re, json, time, hashlib, itertools, os
 import networkx as nx

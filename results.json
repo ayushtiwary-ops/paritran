@@ -16,7 +16,7 @@
   "chain_len": 12,
   "chain_verified": true,
   "tamper_detected": true,
-  "time_to_packet_sec": 0.044,
+  "time_to_packet_sec": 0.045,
   "data": "synthetic, ground-truth known, zero real PII",
   "seed": 42
 }

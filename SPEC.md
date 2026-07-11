@@ -469,7 +469,7 @@ Each milestone ends with an adversarial review subagent in a fresh context check
 | Ollama down or slow on stage | Stub fallback behind identical interface, labelled; demo rehearsed both ways; preflight script checks `ollama list` |
 | InLegalBERT load failure | Model files verified by `/ready`; bundle carries the snapshot; BM25+rules degrade path with mandatory review flag |
 | Docker cold-start at venue | `bundle_save.sh`/`bundle_load.sh` pre-load images; `demo_preflight.sh` boots and smoke-tests everything in one command |
-| Port conflicts on demo Mac | Host ports chosen against a live scan of this machine (8090 api, 8081 web, 5433 db, 9090 prometheus, 3001 grafana; 8000/8080/8001 are occupied by OrbStack and a local python service); preflight re-checks |
+| Port conflicts on demo Mac | Published host ports chosen against a live scan of this machine (8090 api, 8081 web, 3001 grafana; db and prometheus publish nothing; 8000/8080/8001 are occupied by OrbStack and a local python service); preflight re-checks |
 | RNG drift breaking baselines | Draw-order lock test; networkx pinned; Python pinned 3.11 |
 | Judge asks "is any number canned?" | Judge's-seed rerun (no canned value survives an arbitrary seed), Reproduce button, spot-check grep in CI by exit code, standalone runnable prototype |
 | Judge diffs the app numbers against the submitted Appendix A | `docs/CHANGELOG_POST_SUBMISSION.md` owns the correction, old vs new side by side; one rehearsed sentence in the Q&A pack |

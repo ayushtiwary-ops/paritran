@@ -64,17 +64,36 @@ async def check_ollama() -> dict[str, str]:
     return {"status": "ok", "detail": f"GET {url} returned {response.status_code}"}
 
 
+def resolve_model_dir(base: Path) -> Path | None:
+    """Resolve the InLegalBERT weights directory under INLEGALBERT_PATH.
+
+    Accepts either a flat model directory (config.json at the root) or a
+    HuggingFace hub-cache layout (refs/main naming a snapshots/<sha> dir),
+    so the mounted path is machine-independent (no snapshot sha in .env).
+    """
+    if (base / "config.json").is_file():
+        return base
+    ref = base / "refs" / "main"
+    if ref.is_file():
+        snapshot = base / "snapshots" / ref.read_text().strip()
+        if (snapshot / "config.json").is_file():
+            return snapshot
+    snapshots = sorted((base / "snapshots").glob("*/config.json")) if (base / "snapshots").is_dir() else []
+    return snapshots[0].parent if snapshots else None
+
+
 async def check_model_files() -> dict[str, str]:
-    """Verify the InLegalBERT snapshot directory exists with config.json."""
+    """Verify InLegalBERT weights are present under INLEGALBERT_PATH."""
     settings = get_settings()
 
     def probe() -> dict[str, str]:
-        root = Path(settings.INLEGALBERT_PATH)
-        if not root.is_dir():
-            return {"status": "down", "detail": f"{root} is not a directory"}
-        if not (root / "config.json").is_file():
-            return {"status": "down", "detail": f"config.json missing under {root}"}
-        return {"status": "ok", "detail": f"InLegalBERT snapshot present at {root}"}
+        base = Path(settings.INLEGALBERT_PATH)
+        if not base.is_dir():
+            return {"status": "down", "detail": f"{base} is not a directory"}
+        resolved = resolve_model_dir(base)
+        if resolved is None:
+            return {"status": "down", "detail": f"no config.json found under {base}"}
+        return {"status": "ok", "detail": f"InLegalBERT weights present at {resolved}"}
 
     return await asyncio.to_thread(probe)
 

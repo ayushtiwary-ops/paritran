@@ -1,10 +1,11 @@
 """Application settings via pydantic-settings.
 
 Every environment variable from SPEC.md section 4 is declared here with
-its exact name. Defaults are sensible for development on the host Mac
-only (Postgres published on 5433, Ollama native on 11434). The api
-container always receives the real values from the compose environment,
-so no default below is ever load-bearing in a deployed container.
+its exact name. Defaults are inert placeholders for host-side unit tests
+(which monkeypatch all I/O); the compose stack publishes no Postgres host
+port, so the DATABASE_URL default serves nothing unless a developer adds
+a manual port publish. The api container always receives the real values
+from the compose environment, so no default below is load-bearing there.
 
 The CHANGE_ME defaults mirror `.env.example` and are placeholders, not
 secrets. `scripts/bootstrap_env.sh` generates real values into `.env`,

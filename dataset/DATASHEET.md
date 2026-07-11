@@ -29,4 +29,4 @@ Following the "Datasheets for Datasets" framework (Gebru et al., 2021). This doc
 - **Provenance.** Every produced artefact is SHA-256 hashed inside the pipeline, so a given run's data and results are verifiable.
 
 ## Ethical and legal
-- Zero real PII. No complainant, victim or accused data. Safe to share with the jury and to run on any machine. This datasheet and the fixed-seed generator together let a judge reproduce every number in the submission in under a minute.
+- Zero real PII. No complainant, victim or accused data. Safe to share with the jury and to run on any machine. This datasheet and the fixed-seed generator together let a judge reproduce every number in `results.json` (the corrected Appendix A) in under a minute. The submitted PDF's three placeholder-derived numbers differ from these; `docs/CHANGELOG_POST_SUBMISSION.md` states both sets side by side.

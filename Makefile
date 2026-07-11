@@ -1,6 +1,6 @@
 # Paritran developer entry points (SPEC sections 11, 17, 20).
 COMPOSE ?= docker compose
-PORTS   := 8090 8081 5433 9090 3001
+PORTS   := 8090 8081 3001
 
 .PHONY: bootstrap up down logs test preflight
 
