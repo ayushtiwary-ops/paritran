@@ -19,6 +19,8 @@ deferred to Milestone 8 (observability).
 """
 
 import asyncio
+import logging
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import httpx
@@ -28,13 +30,52 @@ from fastapi.responses import JSONResponse
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from paritran.config import get_settings
+from paritran.db import repo
+from paritran.db.migrate import run_migrations
+from paritran.db.seed import seed_users
+
+logger = logging.getLogger(__name__)
 
 CHECK_TIMEOUT_SECONDS = 2.0
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup: migrations + seeding over ADMIN_DATABASE_URL (SPEC 7.1).
+
+    When RUN_MIGRATIONS_ON_STARTUP is true (the compose default), the
+    migration runner and user seeding execute before the app serves
+    traffic, failing fast with a clear error when the database is
+    unreachable. Unit tests set RUN_MIGRATIONS_ON_STARTUP=false and
+    skip all of it. Both helpers are sync by design and run in a
+    worker thread so the event loop is never blocked.
+    """
+    settings = get_settings()
+    if settings.RUN_MIGRATIONS_ON_STARTUP:
+        try:
+            applied = await asyncio.to_thread(
+                run_migrations, settings.ADMIN_DATABASE_URL, settings.APP_DB_PASSWORD
+            )
+            ensured = await asyncio.to_thread(seed_users, settings)
+        except psycopg.OperationalError as exc:
+            raise RuntimeError(
+                "startup aborted: database unreachable while running "
+                f"migrations/seed over ADMIN_DATABASE_URL ({type(exc).__name__}). "
+                "Check that the db service is up and the DSN host/port are correct."
+            ) from exc
+        logger.info(
+            "startup migrations applied=%s seeded_users=%s", applied, ensured
+        )
+        await repo.init_pool(settings.DATABASE_URL)
+    yield
+    await repo.close_pool()
+
 
 app = FastAPI(
     title="Paritran API",
     version="0.1.0",
     description="From complaint to conviction. On-premise court-admissibility engine.",
+    lifespan=lifespan,
 )
 
 Instrumentator().instrument(app).expose(app)

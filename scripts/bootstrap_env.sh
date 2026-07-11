@@ -31,11 +31,14 @@ while IFS= read -r line || [ -n "$line" ]; do
   printf '%s\n' "$line"
 done < "$EXAMPLE_FILE" > "$ENV_FILE"
 
-# Keep DATABASE_URL consistent with the generated POSTGRES_PASSWORD.
-# docker-compose.yml also derives DATABASE_URL from POSTGRES_PASSWORD, so the two can never diverge.
-pg_password="$(grep -E '^POSTGRES_PASSWORD=' "$ENV_FILE" | head -n1 | cut -d= -f2-)"
-db_url="postgresql://paritran_app:${pg_password}@db:5432/paritran"
-sed -e "s|^DATABASE_URL=.*|DATABASE_URL=${db_url}|" "$ENV_FILE" > "$ENV_FILE.tmp"
+# Keep the two DSNs consistent with their generated role passwords
+# (SPEC section 4 role split: paritran_admin owns, paritran_app runs).
+# docker-compose.yml derives both URLs the same way, so they can never diverge.
+admin_password="$(grep -E '^POSTGRES_PASSWORD=' "$ENV_FILE" | head -n1 | cut -d= -f2-)"
+app_password="$(grep -E '^APP_DB_PASSWORD=' "$ENV_FILE" | head -n1 | cut -d= -f2-)"
+sed -e "s|^DATABASE_URL=.*|DATABASE_URL=postgresql://paritran_app:${app_password}@db:5432/paritran|" \
+    -e "s|^ADMIN_DATABASE_URL=.*|ADMIN_DATABASE_URL=postgresql://paritran_admin:${admin_password}@db:5432/paritran|" \
+    "$ENV_FILE" > "$ENV_FILE.tmp"
 mv "$ENV_FILE.tmp" "$ENV_FILE"
 
 chmod 600 "$ENV_FILE"

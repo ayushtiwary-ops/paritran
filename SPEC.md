@@ -107,19 +107,28 @@ paritran_repo/
 ## 4. Environment variables (`.env.example`)
 
 ```
-DATABASE_URL=postgresql://paritran_app:CHANGE_ME@db:5432/paritran
-POSTGRES_PASSWORD=CHANGE_ME
+DATABASE_URL=postgresql://paritran_app:CHANGE_ME@db:5432/paritran        # app role, least privilege
+ADMIN_DATABASE_URL=postgresql://paritran_admin:CHANGE_ME@db:5432/paritran # owner role, migrations only
+POSTGRES_PASSWORD=CHANGE_ME           # paritran_admin (the in-container superuser)
+APP_DB_PASSWORD=CHANGE_ME             # paritran_app login password
 JWT_SECRET=CHANGE_ME                  # bootstrap_env.sh generates 64 hex chars
 JWT_ACCESS_TTL_SECONDS=900
 JWT_REFRESH_TTL_SECONDS=28800
 OLLAMA_BASE_URL=http://host.docker.internal:11434
 OLLAMA_MODEL=gemma3:4b
 OLLAMA_TIMEOUT_SECONDS=30
-INLEGALBERT_PATH=/models/InLegalBERT  # HF snapshot mounted read-only into api
+INLEGALBERT_PATH=/models/InLegalBERT  # api resolves the HF snapshot layout at runtime
+INLEGALBERT_HOST_DIR=~/.cache/huggingface/hub/models--law-ai--InLegalBERT  # bound ro into api
 SEED=42
 DEMO_MODE=false
 SOUND_DEFAULT=off
+GRAFANA_ADMIN_PASSWORD=CHANGE_ME      # scoped to the grafana service only
+OFFICER1_PASSWORD=CHANGE_ME           # seeded users (Section 5); scoped to api
+SUPERVISOR1_PASSWORD=CHANGE_ME
+AUDITOR1_PASSWORD=CHANGE_ME
 ```
+
+**Database role split (least privilege, enforceable REVOKEs).** The in-container superuser is `paritran_admin`; migrations and role bootstrap run over `ADMIN_DATABASE_URL` at api startup. The application connects as `paritran_app`, a non-owner login role created by the migration runner, holding CRUD on domain tables but only SELECT and INSERT on `audit_log`. Without this split, the Section 7.2 REVOKEs would be revoking from the table owner, which Postgres does not enforce.
 
 `scripts/bootstrap_env.sh` creates `.env` from `.env.example` with random secrets if `.env` is absent. No secrets in the repo, ever (gitleaks enforces).
 
@@ -235,7 +244,7 @@ Orchestrates stages 1..9, timing each (p50/p95 aggregation in the eval store), e
 
 ### 7.1 Schema (Postgres 16, plain SQL migrations applied at API startup)
 
-Tables: `users`, `runs` (pipeline executions: seed, git_sha, dataset_version, model tags, metrics JSONB, stage latencies), `complaints`, `entities`, `entity_mentions`, `links`, `networks`, `network_members`, `money_edges`, `trails`, `cases`, `section_mappings`, `claims` (with f9 verdict + reason), `packets`, `officer_decisions`, `audit_log` (Section 8), `eval_runs`.
+Tables: `users`, `runs` (pipeline executions: seed, git_sha, dataset_version, model tags, metrics JSONB, stage latencies), `complaints`, `entities`, `entity_mentions`, `links`, `networks`, `network_members`, `money_edges`, `trails`, `cases`, `section_mappings`, `claims` (with f9 verdict + reason + sub-class), `packets`, `officer_decisions`, `audit_log` (Section 8), `eval_runs`, plus `schema_migrations` (runner bookkeeping: filename, sha256, applied_at). Migrations are plain numbered SQL files applied in order by a runner over `ADMIN_DATABASE_URL` at api startup (idempotent: applied files recorded and checksummed; a changed already-applied file is a hard startup error, never silently re-run).
 
 All engine outputs persist per run so the frontend reads only from the API/DB, never from bundled JSON.
 

@@ -8,6 +8,26 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    # Throwaway per-run credentials for the ephemeral CI database on the
+    # runner's localhost. Generated from workflow run context, never a
+    # committed secret, discarded with the runner.
+    env:
+      CI_PG_ADMIN_PASSWORD: admin-ci-${{ github.run_id }}-${{ github.run_attempt }}
+      CI_PG_APP_PASSWORD: app-ci-${{ github.run_id }}-${{ github.run_attempt }}
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: paritran_admin
+          POSTGRES_DB: paritran
+          POSTGRES_PASSWORD: admin-ci-${{ github.run_id }}-${{ github.run_attempt }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -16,6 +36,14 @@ jobs:
       - name: Install backend dependencies
         run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
       - name: Run backend tests
+        env:
+          ADMIN_DATABASE_URL: postgresql://paritran_admin:${{ env.CI_PG_ADMIN_PASSWORD }}@localhost:5432/paritran
+          DATABASE_URL: postgresql://paritran_app:${{ env.CI_PG_APP_PASSWORD }}@localhost:5432/paritran
+          APP_DB_PASSWORD: ${{ env.CI_PG_APP_PASSWORD }}
+          OFFICER1_PASSWORD: officer1-ci-${{ github.run_id }}-${{ github.run_attempt }}
+          SUPERVISOR1_PASSWORD: supervisor1-ci-${{ github.run_id }}-${{ github.run_attempt }}
+          AUDITOR1_PASSWORD: auditor1-ci-${{ github.run_id }}-${{ github.run_attempt }}
+          RUN_MIGRATIONS_ON_STARTUP: "false"
         run: |
           cd backend
           python -m pytest -q

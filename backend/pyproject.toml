@@ -12,6 +12,12 @@ license = { text = "MIT" }
 [tool.setuptools.packages.find]
 include = ["paritran*"]
 
+# The migration SQL ships inside the wheel so the installed package is
+# self-contained (the container's pytest imports from site-packages).
+[tool.setuptools.package-data]
+"paritran.db" = ["migrations/*.sql"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_default_fixture_loop_scope = "function"
+addopts = "-p no:cacheprovider"

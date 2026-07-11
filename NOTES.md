@@ -38,6 +38,14 @@ Short entries, newest last. This file plus SPEC.md is the durable context across
 26. **OrbStack daemon wedged mid-milestone** (docker version timing out) after parallel builds plus a read-only-mount nginx test container; orbctl stop/start recovered it. Demo-day runbook gets a "docker daemon unresponsive" remediation line.
 27. **Bootstrap credentials** print once and were stashed to the session scratchpad, not the repo. .env is chmod 600 and gitignored.
 
+## 2026-07-11 (Milestone 2 integration)
+
+28. **Audit trigger reassigns seq inside the advisory lock.** Postgres assigns identity values before BEFORE triggers run, so under load seq order diverged from lock (chain) order and forked the chain; the tests agent's 128-append hammer proved it after a lighter 2-session check had passed. `NEW.seq := nextval(...)` after the lock makes seq order equal chain order by construction.
+29. **Chain trigger is SECURITY DEFINER with pinned search_path.** The explicit nextval runs with owner rights, so paritran_app keeps exactly SELECT and INSERT on audit_log and zero sequence grants.
+30. **Seeder is insert-only.** No ON CONFLICT DO UPDATE, no xmax heuristic (it double-audited in practice), no password rotation at startup; rotating a seeded user is an explicit admin action, not a boot side effect.
+31. **Migration SQL ships as setuptools package data.** In-container pytest imports the site-packages wheel; without package data the .sql files exist only in /app and the suite dies on FileNotFoundError while uvicorn (which adds cwd to sys.path) masks the gap.
+32. **The test suite runs on a disposable paritran_test database** created and dropped per session on the same server. Before this, the concurrency hammer left 141 test rows in the live audit ledger, exactly the artefact a judge must never see.
+
 ## Mistake ledger (this repo)
 
 - 2026-07-11: SPEC.md first draft contained a stray CJK character ("替") from an editing slip; caught on self-review, fixed. Class: output-hygiene. One instance.

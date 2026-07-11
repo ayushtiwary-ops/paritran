@@ -3,13 +3,15 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: paritran_app
+      # paritran_admin owns the schema; the app connects as the low-privilege
+      # paritran_app role created by the migration runner (SPEC section 4).
+      POSTGRES_USER: paritran_admin
       POSTGRES_DB: paritran
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U paritran_app -d paritran"]
+      test: ["CMD-SHELL", "pg_isready -U paritran_admin -d paritran"]
       interval: 5s
       timeout: 3s
       retries: 12
@@ -24,8 +26,13 @@ services:
     # never the whole .env (which also holds the Grafana admin and role-seed credentials;
     # the role passwords move here when the Milestone 2 seeder needs them).
     environment:
-      # Derived from POSTGRES_PASSWORD so api and db can never disagree on the credential.
-      DATABASE_URL: postgresql://paritran_app:${POSTGRES_PASSWORD}@db:5432/paritran
+      # Derived from the two db secrets so api and db can never disagree.
+      DATABASE_URL: postgresql://paritran_app:${APP_DB_PASSWORD}@db:5432/paritran
+      ADMIN_DATABASE_URL: postgresql://paritran_admin:${POSTGRES_PASSWORD}@db:5432/paritran
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD}
+      OFFICER1_PASSWORD: ${OFFICER1_PASSWORD}
+      SUPERVISOR1_PASSWORD: ${SUPERVISOR1_PASSWORD}
+      AUDITOR1_PASSWORD: ${AUDITOR1_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       JWT_ACCESS_TTL_SECONDS: ${JWT_ACCESS_TTL_SECONDS}
       JWT_REFRESH_TTL_SECONDS: ${JWT_REFRESH_TTL_SECONDS}

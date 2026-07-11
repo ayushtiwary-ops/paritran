@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     )
 
     DATABASE_URL: str = "postgresql://paritran_app:paritran@localhost:5433/paritran"
+    ADMIN_DATABASE_URL: str = "CHANGE_ME"
+    APP_DB_PASSWORD: str = "CHANGE_ME"
     POSTGRES_PASSWORD: str = "CHANGE_ME"
     JWT_SECRET: str = "CHANGE_ME"
     JWT_ACCESS_TTL_SECONDS: int = 900
@@ -38,6 +40,13 @@ class Settings(BaseSettings):
     SEED: int = 42
     DEMO_MODE: bool = False
     SOUND_DEFAULT: str = "off"
+    OFFICER1_PASSWORD: str = "CHANGE_ME"
+    SUPERVISOR1_PASSWORD: str = "CHANGE_ME"
+    AUDITOR1_PASSWORD: str = "CHANGE_ME"
+    # Migrations and seeding run in the api lifespan (SPEC 7.1). Unit
+    # tests set RUN_MIGRATIONS_ON_STARTUP=false; the compose api service
+    # keeps the default and fails fast when the database is unreachable.
+    RUN_MIGRATIONS_ON_STARTUP: bool = True
 
 
 @lru_cache
