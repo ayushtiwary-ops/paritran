@@ -1,0 +1,200 @@
+{
+  "version": "v2",
+  "entries": [
+    {
+      "id": "BNS 111",
+      "act": "The Bharatiya Nyaya Sanhita, 2023",
+      "section": "111",
+      "title": "Organised crime.",
+      "text_verbatim": "(1) Any continuing unlawful activity including kidnapping, robbery, vehicle theft, extortion, land grabbing, contract killing, economic offence, cyber-crimes, trafficking of persons, drugs, weapons or illicit goods or services, human trafficking for prostitution or ransom, by any person or a group of persons acting in concert, singly or jointly, either as a member of an organised crime syndicate or on behalf of such syndicate, by use of violence, threat of violence, intimidation, coercion, or by any other unlawful means to obtain direct or indirect material benefit including a financial benefit, shall constitute organised crime.\nExplanation.---For the purposes of this sub-section,---\n(i)\"organised crime syndicate\" means a group of two or more persons who, acting either singly or jointly, as a syndicate or gang indulge in any continuing unlawful activity;\n(ii) \"continuing unlawful activity\" means an activity prohibited by law which is a cognizable offence punishable with imprisonment of three years or more, undertaken by any person, either singly or jointly, as a member of an organised crime syndicate or on behalf of such syndicate in respect of which more than one charge-sheets have been filed before a competent Court within the preceding period of ten years and that Court has taken cognizance of such offence, and includes economic offence;\n(iii) \"economic offence\" includes criminal breach of trust, forgery, counterfeiting of currency-notes, bank-notes and Government stamps, hawala transaction, mass-marketing fraud or running any scheme to defraud several persons or doing any act in any manner with a view to defraud any bank or financial institution or any other institution or organisation for obtaining monetary benefits in any form.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionID=90476",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionId=90476&sectionno=111&orderno=111&orgactid=AC_CEN_5_23_00048_2023-45_1719292564123",
+        "accessed": "2026-07-12",
+        "edition": "Act 45 of 2023, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/BNS_111.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "BNS 303",
+      "act": "The Bharatiya Nyaya Sanhita, 2023",
+      "section": "303",
+      "title": "Theft.",
+      "text_verbatim": "(1) Whoever, intending to take dishonestly any movable property out of the possession of any person without that person\u2019s consent, moves that property in order to such taking, is said to commit theft.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionID=90668",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionId=90668&sectionno=303&orderno=303&orgactid=AC_CEN_5_23_00048_2023-45_1719292564123",
+        "accessed": "2026-07-12",
+        "edition": "Act 45 of 2023, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/BNS_303.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "BNS 308",
+      "act": "The Bharatiya Nyaya Sanhita, 2023",
+      "section": "308",
+      "title": "Extortion.",
+      "text_verbatim": "(1) Whoever intentionally puts any person in fear of any injury to that person, or to any other, and thereby dishonestly induces the person so put in fear to deliver to any person any property, or valuable security or anything signed or sealed which may be converted into a valuable security, commits extortion.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionID=90673",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionId=90673&sectionno=308&orderno=308&orgactid=AC_CEN_5_23_00048_2023-45_1719292564123",
+        "accessed": "2026-07-12",
+        "edition": "Act 45 of 2023, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/BNS_308.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "BNS 316",
+      "act": "The Bharatiya Nyaya Sanhita, 2023",
+      "section": "316",
+      "title": "Criminal breach of trust.",
+      "text_verbatim": "(1) Whoever, being in any manner entrusted with property, or with any dominion over property, dishonestly misappropriates or converts to his own use that property, or dishonestly uses or disposes of that property in violation of any direction of law prescribing the mode in which such trust is to be discharged, or of any legal contract, express or implied, which he has made touching the discharge of such trust, or wilfully suffers any other person so to do, commits criminal breach of trust.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionID=90681",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionId=90681&sectionno=316&orderno=316&orgactid=AC_CEN_5_23_00048_2023-45_1719292564123",
+        "accessed": "2026-07-12",
+        "edition": "Act 45 of 2023, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/BNS_316.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "BNS 318",
+      "act": "The Bharatiya Nyaya Sanhita, 2023",
+      "section": "318",
+      "title": "Cheating.",
+      "text_verbatim": "(1) Whoever, by deceiving any person, fraudulently or dishonestly induces the person so deceived to deliver any property to any person, or to consent that any person shall retain any property, or intentionally induces the person so deceived to do or omit to do anything which he would not do or omit if he were not so deceived, and which act or omission causes or is likely to cause damage or harm to that person in body, mind, reputation or property, is said to cheat.\nExplanation.\u2014A dishonest concealment of facts is a deception within the meaning of this section.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionID=90683",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionId=90683&sectionno=318&orderno=318&orgactid=AC_CEN_5_23_00048_2023-45_1719292564123",
+        "accessed": "2026-07-12",
+        "edition": "Act 45 of 2023, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/BNS_318.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "BNS 319",
+      "act": "The Bharatiya Nyaya Sanhita, 2023",
+      "section": "319",
+      "title": "Cheating by personation.",
+      "text_verbatim": "(1) A person is said to cheat by personation if he cheats by pretending to be some other person, or by knowingly substituting one person for or another, or representing that he or any other person is a person other than he or such other person really is.\nExplanation.\u2014The offence is committed whether the individual personated is a real or imaginary person.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionID=90684",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionId=90684&sectionno=319&orderno=319&orgactid=AC_CEN_5_23_00048_2023-45_1719292564123",
+        "accessed": "2026-07-12",
+        "edition": "Act 45 of 2023, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/BNS_319.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "BNS 336",
+      "act": "The Bharatiya Nyaya Sanhita, 2023",
+      "section": "336",
+      "title": "Forgery.",
+      "text_verbatim": "(1) Whoever makes any false document or false electronic record or part of a document or electronic record, with intent to cause damage or injury, to the public or to any person, or to support any claim or title, or to cause any person to part with property, or to enter into any express or implied contract, or with intent to commit fraud or that fraud may be committed, commits forgery.\n(2) Whoever commits forgery shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both.\n(3) Whoever commits forgery, intending that the document or electronic record forged shall be used for the purpose of cheating, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine.\n(4) Whoever commits forgery, intending that the document or electronic record forged shall harm the reputation of any party, or knowing that it is likely to be used for that purpose, shall be punished with imprisonment of either description for a term which may extend to three years, and shall also be liable to fine.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionID=90701",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionId=90701&sectionno=336&orderno=336&orgactid=AC_CEN_5_23_00048_2023-45_1719292564123",
+        "accessed": "2026-07-12",
+        "edition": "Act 45 of 2023, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/BNS_336.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "BNS 338",
+      "act": "The Bharatiya Nyaya Sanhita, 2023",
+      "section": "338",
+      "title": "Forgery of valuable security, will, etc.",
+      "text_verbatim": "Whoever forges a document which purports to be a valuable security or a will, or an authority to adopt a son, or which purports to give authority to any person to make or transfer any valuable security, or to receive the principal, interest or dividends thereon, or to receive or deliver any money, movable property, or valuable security, or any document purporting to be an acquittance or receipt acknowledging the payment of money, or an acquittance or receipt for the delivery of any movable property or valuable security, shall be punished with imprisonment for life, or with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionID=90703",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_5_23_00048_2023-45_1719292564123&sectionId=90703&sectionno=338&orderno=338&orgactid=AC_CEN_5_23_00048_2023-45_1719292564123",
+        "accessed": "2026-07-12",
+        "edition": "Act 45 of 2023, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/BNS_338.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "IT Act 43",
+      "act": "The Information Technology Act, 2000",
+      "section": "43",
+      "title": "Penalty and compensation for damage to computer, computer system, etc.",
+      "text_verbatim": "[43. [Penalty and compensation] for damage to computer, computer system, etc.--If any person without permission of the owner or any other person who is in charge of a computer, computer system or computer network,--\n(a) accesses or secures access to such computer, computer system or computer network [or computer resource];\n(b) downloads, copies or extracts any data, computer data base or information from such computer, computer system or computer network including information or data held or stored in any removable storage medium;\n(c) introduces or causes to be introduced any computer contaminant or computer virus into any computer, computer system or computer network;\n(d) damages or causes to be damaged any computer, computer system or computer network, data, computer data base or any other programmes residing in such computer, computer system or computer network;\n(e) disrupts or causes disruption of any computer, computer system or computer network;\n(f) denies or causes the denial of access to any person authorised to access any computer, computer system or computer network by any means;\n(g) provides any assistance to any person to facilitate access to a computer, computer system or computer network in contravention of the provisions of this Act, rules or regulations made thereunder;\n(h) charges the services availed of by a person to the account of another person by tampering with or manipulating any computer, computer system, or computer network;\n[(i) destroys, deletes or alters any information residing in a computer resource or diminishes its value or utility or affects it injuriously by any means;\n(j) steal, conceal, destroys or alters or causes any person to steal, conceal, destroy or alter any computer source code used for a computer resource with an intention to cause damage;]\n[he shall be liable to pay damages by way of compensation to the person so affected.]",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_45_76_00001_200021_1517807324077&sectionID=13057",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_45_76_00001_200021_1517807324077&sectionId=13057&sectionno=43&orderno=48&orgactid=AC_CEN_45_76_00001_200021_1517807324077",
+        "accessed": "2026-07-12",
+        "edition": "Act 21 of 2000, as amended, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/IT_Act_43.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "IT Act 66",
+      "act": "The Information Technology Act, 2000",
+      "section": "66",
+      "title": "Computer related offences.",
+      "text_verbatim": "[66. Computer related offences.-- If any person, dishonestly or fraudulently, does any act referred to in section 43, he shall be punishable with imprisonment for a term which may extend to three years or with fine which may extend to five lakh rupees or with both.\nExplanation.--For the purposes of this section,--\n(a) the word \"dishonestly\" shall have the meaning assigned to it in section 24 of the Indian Penal Code (45 of 1860);\n(b) the word \"fraudulently\" shall have the meaning assigned to it in section 25 of the Indian Penal Code (45 of 1860).]",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_45_76_00001_200021_1517807324077&sectionID=13085",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_45_76_00001_200021_1517807324077&sectionId=13085&sectionno=66&orderno=76&orgactid=AC_CEN_45_76_00001_200021_1517807324077",
+        "accessed": "2026-07-12",
+        "edition": "Act 21 of 2000, as amended, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/IT_Act_66.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "IT Act 66C",
+      "act": "The Information Technology Act, 2000",
+      "section": "66C",
+      "title": "Punishment for identity theft.",
+      "text_verbatim": "Whoever, fraudulently or dishonestly make use of the electronic signature, password or any other unique identification feature of any other person, shall be punished with imprisonment of either description for a term which may extend to three years and shall also be liable to fine which may extend to rupees one lakh.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_45_76_00001_200021_1517807324077&sectionID=13088",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_45_76_00001_200021_1517807324077&sectionId=13088&sectionno=66C&orderno=79&orgactid=AC_CEN_45_76_00001_200021_1517807324077",
+        "accessed": "2026-07-12",
+        "edition": "Act 21 of 2000, as amended, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/IT_Act_66C.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "IT Act 66D",
+      "act": "The Information Technology Act, 2000",
+      "section": "66D",
+      "title": "Punishment for cheating by personation by using computer resource.",
+      "text_verbatim": "Whoever, by means of any communication device or computer resource cheats by personation, shall be punished with imprisonment of either description for a term which may extend to three years and shall also be liable to fine which may extend to one lakh rupees.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_45_76_00001_200021_1517807324077&sectionID=13089",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_45_76_00001_200021_1517807324077&sectionId=13089&sectionno=66D&orderno=80&orgactid=AC_CEN_45_76_00001_200021_1517807324077",
+        "accessed": "2026-07-12",
+        "edition": "Act 21 of 2000, as amended, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/IT_Act_66D.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    },
+    {
+      "id": "BSA 63",
+      "act": "The Bharatiya Sakshya Adhiniyam, 2023",
+      "section": "63",
+      "title": "Admissibility of electronic records.",
+      "text_verbatim": "(1) Notwithstanding anything contained in this Adhiniyam, any information contained in an electronic record which is printed on paper, stored, recorded or copied in optical or magnetic media or semiconductor memory which is produced by a computer or any communication device or otherwise stored, recorded or copied in any electronic form (hereinafter referred to as the computer output) shall be deemed to be also a document, if the conditions mentioned in this section are satisfied in relation to the information and computer in question and shall be admissible in any proceedings, without further proof or production of the original, as evidence or any contents of the original or of any fact stated therein of which direct evidence would be admissible.\n(2) The conditions referred to in sub-section (1) in respect of a computer output shall be the following, namely:---\n(a) the computer output containing the information was produced by the computer or communication device during the period over which the computer or Communication device was used regularly to create, store or process information for the purposes of any activity regularly carried on over that period by the person having lawful control over the use of the computer or communication device;\n(b) during the said period, information of the kind contained in the electronic record or of the kind from which the information so contained is derived was regularly fed into the computer or Communication device in the ordinary course of the said activities;\n(c) throughout the material part of the said period, the computer or communication device was operating properly or, if not, then in respect of any period in which it was not operating properly or was out of operation during that part of the period, was not such as to affect the electronic record or the accuracy of its contents; and\n(d) the information contained in the electronic record reproduces or is derived from such information fed into the computer or Communication device in the ordinary course of the said activities.\n(3) Where over any period, the function of creating, storing or processing information for the purposes of any activity regularly carried on over that period as mentioned in clause (a) of sub-section (2) was regularly performed by means of one or more computers or communication device, whether--\n(a) in standalone mode; or\n(b) on a computer system; or\n(c) on a computer network; or\n(d) on a computer resource enabling information creation or providing information processing and storage; or\n(e) through an intermediary,\nall the computers or communication devices used for that purpose during that period shall be treated for the purposes of this section as constituting a single computer or communication device; and references in this section to a computer or communication device shall be construed accordingly.\n(4) In any proceeding where it is desired to give a statement in evidence by virtue of this section, a certificate doing any of the following things shall be submitted along with the electronic record at each instance where it is being submitted for admission, namely:--\n(a) identifying the electronic record containing the statement and describing the manner in which it was produced;\n(b) giving such particulars of any device involved in the production of that electronic record as may be appropriate for the purpose of showing that the electronic record was produced by a computer or a communication device referred to in clauses (a) to (e) of sub-section (3);\n(c) dealing with any of the matters to which the conditions mentioned in sub-section (2) relate,\nand purporting to be signed by a person in charge of the computer or communication device or the management of the relevant activities (whichever is appropriate) and an expert shall be evidence of any matter stated in the certificate; and for the purposes of this sub-section it shall be sufficient for a matter to be stated to the best of the knowledge and belief of the person stating it in the certificate specified in the Schedule.",
+      "source_note": {
+        "url": "https://www.indiacode.nic.in/SectionPageContent?actid=AC_CEN_5_23_00049_2023-47_1719292804654&sectionID=90830",
+        "page_url": "https://www.indiacode.nic.in/show-data?abv=CEN&statehandle=123456789/1362&actid=AC_CEN_5_23_00049_2023-47_1719292804654&sectionId=90830&sectionno=63&orderno=63&orgactid=AC_CEN_5_23_00049_2023-47_1719292804654",
+        "accessed": "2026-07-12",
+        "edition": "Act 47 of 2023, India Code digital text as served on 2026-07-12",
+        "authoritative_file": "authoritative/BSA_63.txt",
+        "transform": "Mechanical rendering of the SectionPageContent JSON 'content' field: footnote-reference superscript numerals removed, hard line wraps (CRLF) joined with a single space, <br>/<hr> converted to line breaks, remaining HTML tags stripped, HTML entities unescaped, runs of spaces collapsed. No word added, removed, or changed. Raw endpoint bytes committed alongside as <id>.raw.json."
+      }
+    }
+  ]
+}

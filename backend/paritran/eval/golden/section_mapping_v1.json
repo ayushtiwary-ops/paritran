@@ -1,0 +1,141 @@
+{
+  "version": "v1",
+  "cases": [
+    {
+      "text": "A caller claiming to be from the bank made her share the one time code, then emptied the account",
+      "gold": [
+        "BNS 318",
+        "IT Act 66C"
+      ]
+    },
+    {
+      "text": "He set up a fake trading application and lured victims to deposit money",
+      "gold": [
+        "BNS 318",
+        "IT Act 66D"
+      ]
+    },
+    {
+      "text": "Someone used my stolen credentials to authorise a payment",
+      "gold": [
+        "IT Act 66C"
+      ]
+    },
+    {
+      "text": "A ring of operators ran dozens of rented accounts to move stolen funds",
+      "gold": [
+        "BNS 111"
+      ]
+    },
+    {
+      "text": "She was tricked into transferring money for a promised refund that never came",
+      "gold": [
+        "BNS 318"
+      ]
+    },
+    {
+      "text": "A man pretended to be a police officer on a video call and demanded a fine",
+      "gold": [
+        "BNS 319",
+        "IT Act 66D"
+      ]
+    },
+    {
+      "text": "Impersonating my cousin online, the fraudster asked for urgent money",
+      "gold": [
+        "BNS 319"
+      ]
+    },
+    {
+      "text": "After a phishing message my net banking password was captured",
+      "gold": [
+        "IT Act 66C",
+        "IT Act 66D"
+      ]
+    },
+    {
+      "text": "A parcel scam caller demanded a customs clearance charge",
+      "gold": [
+        "BNS 318"
+      ]
+    },
+    {
+      "text": "The gang laundered proceeds through a chain of go-between accounts",
+      "gold": [
+        "BNS 111"
+      ]
+    },
+    {
+      "text": "My biometric details were cloned to withdraw money",
+      "gold": [
+        "IT Act 66C"
+      ]
+    },
+    {
+      "text": "A fake officer over a call threatened arrest unless money was sent",
+      "gold": [
+        "BNS 318",
+        "BNS 319"
+      ]
+    },
+    {
+      "text": "An app cloned my identity and opened accounts in my name",
+      "gold": [
+        "IT Act 66C",
+        "IT Act 66D"
+      ]
+    },
+    {
+      "text": "I was deceived into paying an advance for a job that did not exist",
+      "gold": [
+        "BNS 318"
+      ]
+    },
+    {
+      "text": "Crypto scheme operators posed as advisors and took deposits",
+      "gold": [
+        "BNS 318",
+        "IT Act 66D"
+      ]
+    },
+    {
+      "text": "A reset link stole my banking login after I clicked it",
+      "gold": [
+        "IT Act 66C",
+        "IT Act 66D"
+      ]
+    },
+    {
+      "text": "The syndicate coordinated withdrawals across many mule accounts",
+      "gold": [
+        "BNS 111"
+      ]
+    },
+    {
+      "text": "A stranger posed as a delivery agent to extract the verification code",
+      "gold": [
+        "BNS 319",
+        "IT Act 66C"
+      ]
+    },
+    {
+      "text": "Fraudsters deceived an elderly man into sending money to a fake charity",
+      "gold": [
+        "BNS 318"
+      ]
+    },
+    {
+      "text": "Using a spoofed number they pretended to be a government official",
+      "gold": [
+        "BNS 319"
+      ]
+    },
+    {
+      "text": "Unauthorised access wiped and transferred funds from the account",
+      "gold": [
+        "IT Act 43",
+        "IT Act 66D"
+      ]
+    }
+  ]
+}

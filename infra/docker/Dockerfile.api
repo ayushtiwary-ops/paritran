@@ -19,6 +19,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN groupadd --gid 10001 paritran \
     && useradd --uid 10001 --gid paritran --create-home --shell /usr/sbin/nologin paritran
 
+# Tesseract OCR binary for artefact ingest (SPEC 9.1: pdfplumber text
+# extraction with Tesseract OCR fallback for scans). Kept slim: no
+# recommended packages, apt lists cleaned in the same layer. The Debian
+# tesseract-ocr package itself depends on the English traineddata.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends tesseract-ocr \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Dev requirements are installed too because SPEC section 17 step 3 runs

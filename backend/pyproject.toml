@@ -12,10 +12,12 @@ license = { text = "MIT" }
 [tool.setuptools.packages.find]
 include = ["paritran*"]
 
-# The migration SQL ships inside the wheel so the installed package is
+# Data files ship inside the wheel so the installed package is
 # self-contained (the container's pytest imports from site-packages).
 [tool.setuptools.package-data]
 "paritran.db" = ["migrations/*.sql"]
+"paritran.engine.legal" = ["*.json", "authoritative/*"]
+"paritran.eval" = ["golden/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
