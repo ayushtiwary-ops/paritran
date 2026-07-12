@@ -55,6 +55,9 @@ export function Layout() {
 
   return (
     <div className="shell">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <nav className="nav" aria-label="Primary">
         <div className="nav-brand">
           <h1>Paritran</h1>
@@ -104,7 +107,7 @@ export function Layout() {
             Cmd+K
           </button>
         </header>
-        <main className="main-body">
+        <main className="main-body" id="main-content" tabIndex={-1}>
           <Outlet />
         </main>
         <footer className="footer">

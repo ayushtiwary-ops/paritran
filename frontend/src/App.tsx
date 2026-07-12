@@ -9,6 +9,7 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { Layout } from "./app/Layout";
 import { RequireAuth } from "./app/RequireAuth";
+import { RouteError } from "./app/RouteError";
 import { CaseFile } from "./screens/CaseFile";
 import { ComingNext } from "./screens/ComingNext";
 import { Custody } from "./screens/Custody";
@@ -19,7 +20,7 @@ import { Login } from "./screens/Login";
 import { Security } from "./screens/Security";
 
 const router = createBrowserRouter([
-  { path: "/login", element: <Login /> },
+  { path: "/login", element: <Login />, errorElement: <RouteError /> },
   {
     path: "/",
     element: (
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
         <Layout />
       </RequireAuth>
     ),
+    errorElement: <RouteError />,
     children: [
       { index: true, element: <Discovery /> },
       { path: "demo", element: <Demo /> },

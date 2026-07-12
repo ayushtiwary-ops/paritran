@@ -22,6 +22,14 @@
   --gold-ink: #C08F44;       /* gold-as-text; core #A87229 was 3.95/3.38 */
   --forest-ink: #4CA886;     /* forest-as-text; core #2D6A4F was 2.18 on card */
   --oxblood-ink: #E08B8B;    /* oxblood-as-text; core #7A2E2E was 1.50 on card */
+
+  /*
+   * Dark ink for text sitting ON the gold brand fill (buttons, skip link,
+   * role chip). Navy #0A1F44 on gold #A87229 was only 3.95 (AA fail); this
+   * is a darkened tint of the same navy hue and clears 4.5 (4.78) without
+   * touching the locked gold in tokens.css.
+   */
+  --navy-on-gold: #050B18;
 }
 
 /* Skip link: first focusable element, off-screen until focused (SPEC 10.4,
@@ -35,7 +43,7 @@
   padding: 0.5rem 0.9rem;
   border-radius: 6px;
   background: var(--color-gold);
-  color: var(--color-navy);
+  color: var(--navy-on-gold);
   font-weight: 600;
   font-size: 0.85rem;
   text-decoration: none;
@@ -168,7 +176,7 @@ button {
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-navy);
+  color: var(--navy-on-gold);
   background: var(--color-gold);
   border-radius: 999px;
   padding: 0.1rem 0.5rem;
@@ -279,7 +287,7 @@ button {
 .btn-primary {
   background: var(--color-gold);
   border-color: var(--color-gold);
-  color: var(--color-navy);
+  color: var(--navy-on-gold);
   font-weight: 600;
 }
 
