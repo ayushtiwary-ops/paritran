@@ -1240,3 +1240,225 @@ th.wrap {
   color: var(--ink-dim);
   word-break: break-all;
 }
+
+/* ---------------------------------------------------------------------------
+ * Guided demo (SPEC 14). Layout + the oxblood flash on an F9 block.
+ * All colors come from the SPEC 10.1 tokens; no new palette is introduced.
+ */
+
+.demo-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.demo-hero {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.demo-hero-copy {
+  flex: 1 1 22rem;
+  min-width: 18rem;
+}
+
+.demo-hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  align-items: flex-end;
+  min-width: 12rem;
+}
+
+.demo-start {
+  font-size: 1rem;
+  padding: 0.7rem 1.6rem;
+}
+
+.demo-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.demo-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-dim);
+  background: rgba(30, 58, 107, 0.4);
+}
+
+.demo-badge.on-prem {
+  border-color: var(--color-forest);
+  color: var(--color-surface);
+}
+
+.demo-badge.wan {
+  border-color: var(--color-muted);
+}
+
+.demo-badge.offline {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.demo-badge.degraded {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20rem;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .demo-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.demo-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.demo-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.demo-control-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.demo-seed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.demo-beats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.demo-beat {
+  opacity: 0.55;
+  transition: opacity 0.25s ease, border-color 0.25s ease;
+}
+
+.demo-beat.active {
+  opacity: 1;
+}
+
+.demo-beat.current {
+  border-color: var(--color-gold);
+}
+
+.demo-beat-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.demo-beat-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  font-size: 0.72rem;
+}
+
+.demo-beat-body {
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.5rem;
+}
+
+.demo-chain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.demo-chain-node {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-dim);
+}
+
+.demo-chain-node.corrupted {
+  border-color: var(--color-oxblood);
+  background: rgba(122, 46, 46, 0.35);
+  color: var(--color-surface);
+}
+
+.planted-card {
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+}
+
+.planted-card.blocked {
+  border-color: var(--color-oxblood);
+  background: rgba(122, 46, 46, 0.16);
+}
+
+.planted-card.leaked {
+  border-color: var(--color-gold);
+  background: rgba(168, 114, 41, 0.16);
+}
+
+.planted-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Oxblood flash when the gate blocks a planted fabrication. Suppressed
+ * under prefers-reduced-motion (SPEC 10.4). */
+.planted-card.flash {
+  animation: oxblood-flash 0.9s ease-out 1;
+}
+
+@keyframes oxblood-flash {
+  0% {
+    background: rgba(122, 46, 46, 0.75);
+    box-shadow: 0 0 0 2px var(--color-oxblood);
+  }
+  100% {
+    background: rgba(122, 46, 46, 0.16);
+    box-shadow: 0 0 0 0 rgba(122, 46, 46, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planted-card.flash {
+    animation: none;
+  }
+}

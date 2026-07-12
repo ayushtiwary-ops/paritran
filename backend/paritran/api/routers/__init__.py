@@ -1,12 +1,13 @@
-"""REST routers for SPEC 9.1 (Milestones 4 and 7).
+"""REST routers for SPEC 9.1 (Milestones 4, 7, and 9).
 
-Deliberately absent (deferred, SPEC 18): ``/api/demo/*`` (Milestone 9).
+Milestone 9 adds ``/api/demo/*`` and the demo beat stream (SPEC 14).
 """
 
 from paritran.api.routers import (  # noqa: F401
     audit,
     cases,
     decisions,
+    demo,
     evaluation,
     intake,
     networks,
@@ -23,4 +24,5 @@ ALL_ROUTERS = (
     audit.router,
     evaluation.router,
     security.router,
+    demo.router,
 )

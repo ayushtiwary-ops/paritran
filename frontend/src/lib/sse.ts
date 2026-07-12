@@ -64,6 +64,97 @@ export type RunEventHandlers = {
   [K in keyof RunEventMap]?: (envelope: SseEnvelope<RunEventMap[K]>) => void;
 };
 
+// ---------------------------------------------------------------------------
+// Demo beat channel (SPEC 14). A separate, longer-lived stream than the run
+// stream: it carries only the paced narrator beats and stays open until
+// demo.completed, so a beat emitted after the fast pipeline finished still
+// arrives. Every figure inside a beat payload was produced by the real run.
+
+export interface DemoBeatMeta {
+  index: number;
+  key: string;
+  title: string;
+  window: string;
+  detail: string;
+}
+
+export interface DemoLinkRejected {
+  ok: boolean;
+  reason?: string;
+  a?: number;
+  b?: number;
+  w?: number;
+  seq?: number;
+  hash?: string;
+  prev_hash?: string;
+  action?: string;
+}
+
+export interface DemoTrailBeat {
+  pct_traced: number | null;
+  method: string | null;
+}
+
+export interface DemoF9Beat {
+  generator_name: string | null;
+  is_stub: boolean | null;
+  corpus_version: string | null;
+  claims: number | null;
+  passed: number | null;
+  withheld: number | null;
+  leaked: number | null;
+  degraded: boolean | null;
+}
+
+export interface DemoPlanted {
+  label: string;
+  section: string;
+  quote: string;
+  is_fabricated: boolean | null;
+  verdict: string;
+  sub_class: string | null;
+  corpus_version: string;
+  generator_name: string;
+  blocked: boolean;
+  gate_rule: string;
+}
+
+export interface DemoCustodyBeat {
+  chain_len: number;
+  chain_verified: boolean | null;
+  corrupted_index: number;
+  corrupted_record: string;
+  tamper_broke_chain: boolean;
+}
+
+export interface DemoBeatPayload {
+  index: number;
+  key: string;
+  status: string;
+  link_rejected?: DemoLinkRejected;
+  trail?: DemoTrailBeat;
+  planted?: DemoPlanted;
+  f9?: DemoF9Beat;
+  custody?: DemoCustodyBeat;
+}
+
+export interface DemoEventMap {
+  "demo.started": {
+    run_id: string;
+    seed: number;
+    generator: string;
+    scale: number;
+    beats: DemoBeatMeta[];
+  };
+  "demo.beat": DemoBeatPayload;
+  "demo.completed": { run_id: string; elapsed_sec: number; beats: number };
+  "demo.failed": { error: string };
+}
+
+export type DemoEventHandlers = {
+  [K in keyof DemoEventMap]?: (envelope: SseEnvelope<DemoEventMap[K]>) => void;
+};
+
 export interface ComponentCheck {
   status: string;
   detail: string;
@@ -169,6 +260,76 @@ export function openRunStream(
   const close = (): void => {
     closed = true;
     if (retryTimer !== null) clearTimeout(retryTimer);
+    source?.close();
+  };
+
+  connect();
+  return { close };
+}
+
+const DEMO_TERMINAL_EVENTS = ["demo.completed", "demo.failed"] as const;
+
+/**
+ * Subscribe to one demo's paced beats (SPEC 14). Mirrors openRunStream:
+ * the server replays stored beats, then tails live ones, and closes after
+ * demo.completed or demo.failed; the wrapper closes its side on a terminal
+ * event so the server hang-up is not misread as an error.
+ */
+export function openDemoStream(
+  demoId: string,
+  handlers: DemoEventHandlers,
+  options: StreamOptions = {},
+): StreamHandle {
+  const { onError } = options;
+  let source: EventSource | null = null;
+  let closed = false;
+  let terminal = false;
+  let refreshRetried = false;
+
+  const connect = (): void => {
+    source = new EventSource(
+      streamUrl(`/api/stream/demo/${encodeURIComponent(demoId)}`),
+    );
+    for (const name of Object.keys(handlers) as (keyof DemoEventMap)[]) {
+      const handler = handlers[name];
+      if (!handler) continue;
+      source.addEventListener(name, (event: MessageEvent<string>) => {
+        if (closed) return;
+        refreshRetried = false;
+        let envelope: SseEnvelope<never>;
+        try {
+          envelope = JSON.parse(event.data) as SseEnvelope<never>;
+        } catch {
+          return;
+        }
+        if ((DEMO_TERMINAL_EVENTS as readonly string[]).includes(name)) {
+          terminal = true;
+        }
+        (handler as (e: SseEnvelope<never>) => void)(envelope);
+        if (terminal) close();
+      });
+    }
+    source.onerror = (event: Event) => {
+      if (closed || terminal) {
+        close();
+        return;
+      }
+      source?.close();
+      void (async () => {
+        const refreshed = refreshRetried ? false : await refreshSession();
+        if (closed) return;
+        if (refreshed) {
+          refreshRetried = true;
+          connect();
+        } else {
+          onError?.(event);
+        }
+      })();
+    };
+  };
+
+  const close = (): void => {
+    closed = true;
     source?.close();
   };
 

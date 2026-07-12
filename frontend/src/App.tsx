@@ -12,6 +12,7 @@ import { RequireAuth } from "./app/RequireAuth";
 import { CaseFile } from "./screens/CaseFile";
 import { ComingNext } from "./screens/ComingNext";
 import { Custody } from "./screens/Custody";
+import { Demo } from "./screens/Demo";
 import { Discovery } from "./screens/Discovery";
 import { Evaluation } from "./screens/Evaluation";
 import { Login } from "./screens/Login";
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Discovery /> },
+      { path: "demo", element: <Demo /> },
       { path: "casefile", element: <CaseFile /> },
       { path: "custody", element: <Custody /> },
       { path: "evaluation", element: <Evaluation /> },

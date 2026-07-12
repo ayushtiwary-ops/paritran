@@ -20,6 +20,7 @@ interface PaletteProps {
 
 const SCREENS: { label: string; to: string }[] = [
   { label: "Discovery & Triage", to: "/" },
+  { label: "Guided Demo", to: "/demo" },
   { label: "Case File", to: "/casefile" },
   { label: "Custody Ledger", to: "/custody" },
   { label: "Evaluation", to: "/evaluation" },

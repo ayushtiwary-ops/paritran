@@ -13,7 +13,7 @@ Milestone 4 surface:
   prometheus-fastapi-instrumentator (SPEC section 12).
 - The SPEC 9.1 REST routers (auth, intake, runs, networks, cases,
   decisions, audit, evaluation, security) and the SPEC 9.2 SSE
-  channels. Deferred by milestone plan: /api/demo/* (M9).
+  channels, plus the SPEC 14 /api/demo/* controls and beat stream (M9).
 - slowapi rate limiting keyed by JWT sub with role budgets (SPEC 5):
   officer/supervisor 120/min, auditor 60/min, anonymous 20/min. The
   public health/ready/metrics probes are not part of the API budget.

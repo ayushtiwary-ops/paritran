@@ -20,6 +20,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Discovery", to: "/", end: true },
+  { label: "Demo", to: "/demo", tag: "SPEC 14" },
   { label: "Case File", to: "/casefile", tag: "M6" },
   { label: "Custody", to: "/custody", tag: "M6" },
   { label: "Evaluation", to: "/evaluation" },
@@ -27,6 +28,7 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 function titleFor(pathname: string): string {
+  if (pathname.startsWith("/demo")) return "Guided Demo";
   if (pathname.startsWith("/casefile")) return "Case File";
   if (pathname.startsWith("/custody")) return "Custody Ledger";
   if (pathname.startsWith("/evaluation")) return "Evaluation";
