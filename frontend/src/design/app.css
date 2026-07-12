@@ -8,6 +8,41 @@
   --line: rgba(251, 250, 246, 0.12);
   --line-strong: rgba(251, 250, 246, 0.24);
   --ink-dim: rgba(251, 250, 246, 0.66);
+
+  /*
+   * Derived on-dark TEXT colors for WCAG AA (SPEC 10.4 contrast). Each
+   * clears 4.5:1 on both the navy page (#0A1F44) and the composited card
+   * surface (#132B56). The SPEC 10.1 core palette in tokens.css is left
+   * byte-identical and still drives every fill, border, dot, and graph
+   * node; these variables lighten only small secondary/accent TEXT that
+   * would otherwise fail AA. They are tints of the locked hues, not new
+   * brand colors.
+   */
+  --text-secondary: #9A978C; /* muted-as-text; core #87847A was 4.34/3.72 */
+  --gold-ink: #C08F44;       /* gold-as-text; core #A87229 was 3.95/3.38 */
+  --forest-ink: #4CA886;     /* forest-as-text; core #2D6A4F was 2.18 on card */
+  --oxblood-ink: #E08B8B;    /* oxblood-as-text; core #7A2E2E was 1.50 on card */
+}
+
+/* Skip link: first focusable element, off-screen until focused (SPEC 10.4,
+ * "full keyboard navigation, no dead ends"). */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 60;
+  transform: translateY(-160%);
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  background: var(--color-gold);
+  color: var(--color-navy);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 a {
@@ -70,7 +105,7 @@ button {
   font-size: 0.62rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--gold-ink);
 }
 
 .nav-links {
@@ -110,7 +145,7 @@ button {
   font-family: var(--font-mono);
   font-size: 0.58rem;
   letter-spacing: 0.06em;
-  color: var(--color-muted);
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
@@ -173,13 +208,13 @@ button {
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.08em;
-  color: var(--color-muted);
+  color: var(--text-secondary);
 }
 
 .kbd-hint {
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  color: var(--color-muted);
+  color: var(--text-secondary);
   border: 1px solid var(--line-strong);
   border-radius: 4px;
   padding: 0.15rem 0.45rem;
@@ -207,7 +242,7 @@ button {
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--gold-ink);
 }
 
 .mono {
@@ -215,7 +250,7 @@ button {
 }
 
 .muted {
-  color: var(--color-muted);
+  color: var(--text-secondary);
 }
 
 .small {
@@ -270,7 +305,7 @@ button {
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-muted);
+  color: var(--text-secondary);
   margin-bottom: 0.3rem;
 }
 
@@ -309,7 +344,7 @@ button {
   font-size: 0.6rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--text-secondary);
   margin: 0 0 0.45rem;
 }
 
@@ -317,7 +352,7 @@ button {
   margin: 0.4rem 0 0.15rem;
   font-family: var(--font-mono);
   font-size: 0.6rem;
-  color: var(--color-muted);
+  color: var(--text-secondary);
 }
 
 /* --------------------------------------------------------------- login */
@@ -387,7 +422,7 @@ button {
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-muted);
+  color: var(--text-secondary);
   margin: 0 0 0.35rem;
 }
 
@@ -403,7 +438,7 @@ button {
   margin: 0.3rem 0 0;
   font-family: var(--font-mono);
   font-size: 0.66rem;
-  color: var(--color-muted);
+  color: var(--text-secondary);
 }
 
 .metric-chip {
@@ -462,7 +497,7 @@ button {
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: var(--color-muted);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   padding: 2rem;
 }
@@ -480,12 +515,12 @@ button {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.18rem 0.55rem;
-  color: var(--color-muted);
+  color: var(--text-secondary);
 }
 
 .stage-pill.running {
   border-color: var(--color-gold);
-  color: var(--color-gold);
+  color: var(--gold-ink);
 }
 
 .stage-pill.done {
@@ -520,7 +555,7 @@ button {
   font-family: var(--font-serif);
   font-size: 1.35rem;
   font-weight: 600;
-  color: var(--color-gold);
+  color: var(--gold-ink);
 }
 
 .triage-inputs {
@@ -575,7 +610,7 @@ button {
 }
 
 .link-facts dt {
-  color: var(--color-muted);
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -609,7 +644,7 @@ table.data th {
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-muted);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -629,17 +664,17 @@ th.wrap {
 }
 
 .diff-equal .check {
-  color: var(--color-forest);
+  color: var(--forest-ink);
   font-weight: 700;
 }
 
 .diff-differs {
-  color: var(--color-oxblood);
+  color: var(--oxblood-ink);
   font-weight: 600;
 }
 
 .diff-skipped {
-  color: var(--color-muted);
+  color: var(--text-secondary);
 }
 
 /* ---------------------------------------------------------------- cmdk */
@@ -705,13 +740,13 @@ th.wrap {
 [cmdk-item] .hint {
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  color: var(--color-muted);
+  color: var(--text-secondary);
 }
 
 [cmdk-empty] {
   padding: 0.9rem 1rem;
   font-size: 0.85rem;
-  color: var(--color-muted);
+  color: var(--text-secondary);
 }
 
 [cmdk-group-heading] {
@@ -719,7 +754,7 @@ th.wrap {
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-muted);
+  color: var(--text-secondary);
   padding: 0.5rem 0.7rem 0.25rem;
 }
 
@@ -757,7 +792,7 @@ th.wrap {
 }
 
 .trail-col-label {
-  fill: var(--color-muted);
+  fill: var(--text-secondary);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -791,7 +826,7 @@ th.wrap {
 }
 
 .trail-amount {
-  fill: var(--color-gold);
+  fill: var(--gold-ink);
   font-size: 10px;
   opacity: 0;
   animation: trail-fade 0.4s ease-out forwards;
@@ -848,7 +883,7 @@ th.wrap {
 }
 
 .section-id {
-  color: var(--color-gold);
+  color: var(--gold-ink);
   font-size: 0.78rem;
 }
 
@@ -906,11 +941,11 @@ th.wrap {
 }
 
 .f9-passed {
-  color: var(--color-forest);
+  color: var(--forest-ink);
 }
 
 .f9-withheld {
-  color: #C06C6C;
+  color: var(--oxblood-ink);
 }
 
 .verdict-list {
@@ -1003,7 +1038,7 @@ th.wrap {
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-muted);
+  color: var(--text-secondary);
   margin: 0;
   align-self: baseline;
 }
@@ -1113,7 +1148,7 @@ th.wrap {
 
 .chain-seq {
   font-size: 0.68rem;
-  color: var(--color-gold);
+  color: var(--gold-ink);
 }
 
 .chain-hashes {
@@ -1305,12 +1340,12 @@ th.wrap {
 
 .demo-badge.offline {
   border-color: var(--color-gold);
-  color: var(--color-gold);
+  color: var(--gold-ink);
 }
 
 .demo-badge.degraded {
   border-color: var(--color-gold);
-  color: var(--color-gold);
+  color: var(--gold-ink);
 }
 
 .demo-grid {

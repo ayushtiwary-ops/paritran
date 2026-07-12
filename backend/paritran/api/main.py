@@ -140,8 +140,14 @@ def _reject_degenerate_secrets(settings) -> None:
         "OFFICER1_PASSWORD": settings.OFFICER1_PASSWORD,
         "SUPERVISOR1_PASSWORD": settings.SUPERVISOR1_PASSWORD,
         "AUDITOR1_PASSWORD": settings.AUDITOR1_PASSWORD,
+        # The JWT signing key is the most security-critical secret: an empty or
+        # default HS256 key lets anyone forge any role token. Hardened like the
+        # passwords, plus a minimum length.
+        "JWT_SECRET": settings.JWT_SECRET,
     }
     bad = sorted(name for name, value in required.items() if value in ("", "CHANGE_ME"))
+    if settings.JWT_SECRET not in ("", "CHANGE_ME") and len(settings.JWT_SECRET) < 32:
+        bad.append("JWT_SECRET (too short, need >= 32 chars)")
     if bad:
         raise RuntimeError(
             "startup aborted: placeholder or empty secrets for "

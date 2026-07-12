@@ -498,7 +498,7 @@ export function Evaluation() {
             >
               {allGreen && (
                 <p className="notice-box small" role="status">
-                  <span style={{ color: "var(--color-forest)" }}>✓</span>{" "}
+                  <span style={{ color: "var(--forest-ink)" }}>✓</span>{" "}
                   Every compared key matches the committed baseline
                   exactly. The numbers regenerated live.
                 </p>

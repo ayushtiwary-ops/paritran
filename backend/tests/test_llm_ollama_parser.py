@@ -217,3 +217,12 @@ def test_live_ollama_generates_parseable_claims():
         assert claim.section
         assert claim.quote
         assert claim.is_fabricated is None
+
+
+def test_parse_strips_bracketed_section_id():
+    """Models echo the prompt's [BNS 111] bracket form; parser must strip it
+    so the id matches the corpus key (else valid citations gate as invented)."""
+    from paritran.llm.ollama_client import parse_claims
+    out = parse_claims('[{"section": "[BNS 111]", "quote": "organised crime"}]')
+    assert len(out) == 1
+    assert out[0].section == "BNS 111"

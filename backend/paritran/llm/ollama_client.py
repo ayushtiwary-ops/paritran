@@ -88,7 +88,13 @@ def parse_claims(text: str) -> ParsedClaims:
         if not isinstance(section, str) or not isinstance(quote, str):
             errors += 1
             continue
-        section, quote = section.strip(), quote.strip()
+        # The prompt renders corpus ids in brackets ("[BNS 111] text"); models
+        # echo the brackets. Strip a surrounding [...] so the id matches the
+        # corpus key, else every valid citation is falsely gated invented.
+        section = section.strip()
+        if len(section) >= 2 and section[0] == "[" and section[-1] == "]":
+            section = section[1:-1].strip()
+        quote = quote.strip()
         if not section or not quote:
             errors += 1
             continue

@@ -80,3 +80,8 @@ Short entries, newest last. This file plus SPEC.md is the durable context across
 
 ## 2026-07-12 (M9 demo mode)
 46. M9: demo.py orchestrator drives real seed-42 pipeline through 5 scripted beats (SPEC 14). /api/demo/start + /api/demo/plant-fabrication (supervisor-gated). Playwright e2e: 34.2s end-to-end (<90s), 9 stages, planted fab blocked live, tamper breaks scratch chain, zero console errors. All numbers real engine output via SSE. @playwright/test 1.61.1 pinned. Live-verified in rebuilt real image: plant-fab WITHHELD/blocked/v2/BNS 318, start returns run+stream ids. 190 in-container tests green.
+
+## 2026-07-12 (M10 final review fixes)
+47. CRITICAL fixed: live Ollama F9 echoed prompt brackets "[BNS 111]"; parse_claims now strips surrounding [...] so valid citations gate correctly. Was 6/0 all false invented_section (kill-shot #2 exposure); now 5 passed/1 withheld (real paraphrase), 0 leaked. Test added.
+48. MAJOR fixed: JWT_SECRET added to _reject_degenerate_secrets startup guard (empty/CHANGE_ME/<32char rejected) matching password hardening.
+49. MINOR fixed: runstore _runs (cap 64) + demo _demos (cap 32) LRU-evicted, artifacts freed, so scripted run bursts cannot OOM the on-prem box.

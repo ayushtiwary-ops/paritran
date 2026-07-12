@@ -162,6 +162,13 @@ class DemoEntry:
 
 
 _demos: dict[str, DemoEntry] = {}
+_MAX_RETAINED_DEMOS = 32
+
+
+def _evict_old_demos() -> None:
+    """Cap the demo registry so repeated /api/demo/start cannot OOM."""
+    while len(_demos) > _MAX_RETAINED_DEMOS:
+        _demos.pop(next(iter(_demos)))
 
 
 def get(demo_id: str) -> DemoEntry | None:
@@ -464,5 +471,6 @@ async def start_demo(actor: str) -> DemoEntry:
         demo_id=uuid.uuid4().hex, run_id=run_entry.run_id, actor=actor
     )
     _demos[entry.demo_id] = entry
+    _evict_old_demos()
     entry.task = asyncio.create_task(_orchestrate(entry, run_entry))
     return entry

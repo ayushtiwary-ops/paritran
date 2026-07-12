@@ -106,6 +106,21 @@ class RunEntry:
 
 _runs: dict[str, RunEntry] = {}
 
+# Bound the in-process registry so a scripted burst of runs cannot OOM the
+# on-prem box. Persisted domain data lives in Postgres; the registry only
+# serves live SSE replay and the networks/case views for recent runs.
+_MAX_RETAINED_RUNS = 64
+
+
+def _evict_old_runs() -> None:
+    """Drop the oldest runs (insertion order) beyond the cap, freeing their
+    artifacts and event lists. dict preserves insertion order in 3.11."""
+    while len(_runs) > _MAX_RETAINED_RUNS:
+        oldest = next(iter(_runs))
+        entry = _runs.pop(oldest)
+        entry.artifacts = None
+        entry.events = []
+
 # One-slot cache: empty until first build, then [mapper_or_None].
 _MAPPER_CACHE: list = []
 _MAPPER_LOCK = threading.Lock()
@@ -242,6 +257,7 @@ async def start_run(seed: int, generator: str) -> RunEntry:
     """
     entry = RunEntry(run_id=uuid.uuid4().hex, seed=seed, generator=generator)
     _runs[entry.run_id] = entry
+    _evict_old_runs()
     RUNS_TOTAL.labels(generator=generator).inc()
     _append(entry, "run.started", None, {"seed": seed, "generator": generator})
 
