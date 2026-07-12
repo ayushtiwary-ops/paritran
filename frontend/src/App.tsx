@@ -1,16 +1,18 @@
 /**
  * Route table (react-router v7 data router).
  *
- * Screens per SPEC 10.3. Case File and Custody land next (Milestone 6)
- * and Security Posture in Milestone 7; until then their routes render
- * the honest ComingNext placeholder so no navigation dead-ends.
+ * Screens per SPEC 10.3. Security Posture lands in Milestone 7; until
+ * then its route renders the honest ComingNext placeholder so no
+ * navigation dead-ends.
  */
 
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { Layout } from "./app/Layout";
 import { RequireAuth } from "./app/RequireAuth";
+import { CaseFile } from "./screens/CaseFile";
 import { ComingNext } from "./screens/ComingNext";
+import { Custody } from "./screens/Custody";
 import { Discovery } from "./screens/Discovery";
 import { Evaluation } from "./screens/Evaluation";
 import { Login } from "./screens/Login";
@@ -26,32 +28,8 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Discovery /> },
-      {
-        path: "casefile",
-        element: (
-          <ComingNext
-            title="Case File"
-            milestone="Milestone 6"
-            summary={
-              "Money trail animation, verbatim v2 section quotes, the" +
-              " Section 63 certificate, and the F9 claim panel."
-            }
-          />
-        ),
-      },
-      {
-        path: "custody",
-        element: (
-          <ComingNext
-            title="Custody Ledger"
-            milestone="Milestone 6"
-            summary={
-              "The hash-chained evidence ledger with prev-hash linkage" +
-              " drawn, and the auditor's live tamper test."
-            }
-          />
-        ),
-      },
+      { path: "casefile", element: <CaseFile /> },
+      { path: "custody", element: <Custody /> },
       { path: "evaluation", element: <Evaluation /> },
       {
         path: "security",

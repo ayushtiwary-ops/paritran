@@ -44,6 +44,7 @@ import {
   type NetworkSummary,
 } from "../lib/api";
 import { inr, num, pct, shortHash } from "../lib/format";
+import { recordRecentRun } from "../lib/recentRuns";
 import {
   openRunStream,
   type RunEventMap,
@@ -424,6 +425,13 @@ export function Discovery() {
     setStarting(true);
     try {
       const started = await startRun(seed, generatorInput);
+      // Case File's run picker reads this back from sessionStorage.
+      recordRecentRun({
+        run_id: started.run_id,
+        seed: started.seed,
+        generator: started.generator,
+        started_at: new Date().toISOString(),
+      });
       setSearchParams({ run: started.run_id });
       pushToast({
         title: `Run started (seed ${started.seed}, ${started.generator})`,
