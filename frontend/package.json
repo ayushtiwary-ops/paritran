@@ -13,8 +13,15 @@
     "@fontsource/ibm-plex-mono": "5.2.7",
     "@fontsource/ibm-plex-sans": "5.2.8",
     "@fontsource/ibm-plex-serif": "5.2.7",
+    "@tanstack/react-query": "5.101.2",
+    "cmdk": "1.1.1",
+    "motion": "12.42.2",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-countup": "6.5.3",
+    "react-dom": "18.3.1",
+    "react-force-graph-2d": "1.29.1",
+    "react-loading-skeleton": "3.5.0",
+    "react-router": "7.18.1"
   },
   "devDependencies": {
     "@types/react": "18.3.31",
