@@ -24,7 +24,7 @@ from paritran.engine.ingest_ocr import (
 from paritran.engine.ner import extract
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SAMPLES_DIR = REPO_ROOT / "dataset" / "samples"
+from _paths import SAMPLES_DIR  # noqa: E402
 PDF_SAMPLE = SAMPLES_DIR / "complaint_sample.pdf"
 PNG_SAMPLE = SAMPLES_DIR / "complaint_scan.png"
 

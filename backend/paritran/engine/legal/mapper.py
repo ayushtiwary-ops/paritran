@@ -115,18 +115,30 @@ class FullMapper:
             raise ValueError("measure needs at least one golden case")
         hits = 0
         routed = 0
+        high_n = 0
+        high_hits = 0
         for case in cases:
             text, gold = _normalize_case(case)
             mapping = self.map(text)
-            if set(mapping.sections) & gold:
+            hit = bool(set(mapping.sections) & gold)
+            if hit:
                 hits += 1
             if mapping.routed_to_human:
                 routed += 1
+            else:
+                high_n += 1
+                if hit:
+                    high_hits += 1
         n = len(cases)
         return {
             "n": n,
             "accuracy": round(100 * hits / n, 1),
             "routing_rate": round(100 * routed / n, 1),
+            # The officer-safety headline: accuracy on the cases the three-path
+            # agreement gate auto-decides (HIGH confidence). Everything else
+            # routes to a human, so this is what an officer actually sees.
+            "high_confidence_n": high_n,
+            "high_confidence_accuracy": round(100 * high_hits / high_n, 1) if high_n else None,
             "method": (
                 "alpha*bm25_norm + (1-alpha)*InLegalBERT cosine, alpha=0.5 frozen, "
                 "top-2, hit iff prediction intersects gold"

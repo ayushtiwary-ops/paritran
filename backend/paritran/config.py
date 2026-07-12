@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     JWT_REFRESH_TTL_SECONDS: int = 28800
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "gemma3:4b"
-    OLLAMA_TIMEOUT_SECONDS: int = 30
+    OLLAMA_TIMEOUT_SECONDS: int = 120
     INLEGALBERT_PATH: str = "/models/InLegalBERT"
     SEED: int = 42
     DEMO_MODE: bool = False

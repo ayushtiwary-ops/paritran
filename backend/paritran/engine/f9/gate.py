@@ -41,19 +41,21 @@ class Gate:
         self.corpus_version = corpus_version
 
     def check(self, section: str, quote: str) -> bool:
-        """The prototype's gate rule, byte-exact semantics.
+        """Whitespace-normalized verbatim rule (SPEC 6.8).
 
-        ``sec in CORPUS and quote.strip().lower() in CORPUS[sec].lower()``.
-        Note the prototype-inherited edge: an empty quote against an
-        existing section passes vacuously. No generator in this codebase
-        emits empty quotes (the stub never does; the Ollama parser drops
-        them as malformed), and changing the rule would break byte-exact
-        reproduction of the frozen baseline.
+        Statute text wraps across lines, so runs of whitespace fold to a
+        single space on BOTH sides before the case-insensitive substring
+        test; the token sequence must still match exactly, so paraphrase
+        never passes. Corpus v1 and the stub are single-line, so the
+        frozen 40/10/0 baseline is identical under this rule (locked by
+        tests). Empty quotes are rejected outright (the prototype passed
+        them vacuously; no generator here emits them, tests lock this).
         """
-        return (
-            section in self.corpus
-            and quote.strip().lower() in self.corpus[section].lower()
-        )
+        if section not in self.corpus:
+            return False
+        quote_n = " ".join(quote.split()).lower()
+        text_n = " ".join(self.corpus[section].split()).lower()
+        return bool(quote_n) and quote_n in text_n
 
     def evaluate(
         self,

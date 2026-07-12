@@ -16,7 +16,7 @@ from paritran.engine import money_trail, synthetic
 
 SEED = 42
 BREAK_SEED = 22  # ledger has missing edges at this seed
-RESULTS_JSON = Path(__file__).resolve().parents[2] / "results.json"
+from _paths import ORACLE_RESULTS as RESULTS_JSON
 
 
 def test_seed42_pct_traced_matches_results_json_exactly():

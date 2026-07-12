@@ -116,7 +116,7 @@ JWT_ACCESS_TTL_SECONDS=900
 JWT_REFRESH_TTL_SECONDS=28800
 OLLAMA_BASE_URL=http://host.docker.internal:11434
 OLLAMA_MODEL=gemma3:4b
-OLLAMA_TIMEOUT_SECONDS=30
+OLLAMA_TIMEOUT_SECONDS=120
 INLEGALBERT_PATH=/models/InLegalBERT  # api resolves the HF snapshot layout at runtime
 INLEGALBERT_HOST_DIR=~/.cache/huggingface/hub/models--law-ai--InLegalBERT  # bound ro into api
 SEED=42
@@ -210,7 +210,7 @@ spaCy pipeline with an EntityRuler layered over regex patterns for Indian identi
 
 ### 6.8 `engine/f9/` (REAL gate over a real generative step)
 
-Gate rule (unchanged): a claim `(section, quote)` passes iff the section exists in the target corpus AND the quote is a verbatim case-insensitive substring of that section's text. Catches paraphrase and invention.
+Gate rule: a claim `(section, quote)` passes iff the section exists in the target corpus AND the quote is a whitespace-normalized, case-insensitive verbatim substring (runs of whitespace fold to one space on both sides; token sequence exact, paraphrase never passes; empty quotes rejected) of that section's text. Catches paraphrase and invention.
 
 Claim generators behind one protocol (`llm/client.py`):
 

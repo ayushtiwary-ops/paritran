@@ -10,7 +10,7 @@ from pathlib import Path
 from paritran.engine import linkage, synthetic
 
 SEED = 42
-RESULTS_JSON = Path(__file__).resolve().parents[2] / "results.json"
+from _paths import ORACLE_RESULTS as RESULTS_JSON
 
 
 def _oracle() -> dict:

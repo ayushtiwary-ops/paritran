@@ -61,3 +61,13 @@ Short entries, newest last. This file plus SPEC.md is the durable context across
 - 2026-07-11: SPEC.md first draft carried forward two overclaims from upstream docs ("real hallucinations" from the stub, "verbatim bare act" for condensed text) instead of catching them. Class: inherited-claim-not-verified.
 - 2026-07-11: The rule-7 wording revision corrected the results keys and section comments but missed the module docstring ("real adversary", "every stage a REAL computation"); caught by the M1 adversarial review, fixed in a same-day addendum. Class: inherited-claim-not-verified, second instance. One more instance of this class means a codified rule: every wording-correction pass ends with a grep for the banned claim vocabulary over the whole touched file, not the edited hunks.
 - 2026-07-11: M1 build wave produced three cross-agent inconsistencies (INLEGALBERT_PATH sha in .env.example vs SPEC, api env_file over-sharing secrets, ports claimed in NOTES/Makefile that nothing binds); all caught by the M1 adversarial review before the milestone closed. Class: parallel-agents-need-a-contract-linter.
+
+## 2026-07-12 (Milestone 3 closed)
+
+38. M3 done, 164 tests green in-container. Seed-42 reproduction exact through the full pipeline+harness. Mapping rows (golden v1): v1 floor 52.4, v2 bm25 ablation 38.1, v2 full stack 38.1, routing 61.9; extended v2: 35.0, routing 75.0. The honest headline: high-confidence (three-path agreement) accuracy is 100.0 on both sets (8/8, 15/15); everything else routes to a human. BSA 63 excluded from offence candidates (lifted extended v2 from 25.0 to 35.0).
+39. F9 gate is whitespace-normalized verbatim (statute text wraps; token-exact still enforced; stub baseline unchanged). Live gemma3:4b run: 6 claims, 0 passed, 6 withheld (real paraphrases caught live), 0 leaked. OLLAMA_TIMEOUT_SECONDS raised to 120 (cold model load exceeded 30s; degrade-to-stub path proved itself honestly, labelled + flagged).
+40. NER live-measured: precision 0.74, recall 1.0 at seed 42. Oracle/results.json and dataset/samples reach the container via ro mounts + PARITRAN_* env (single source of truth).
+41. Founder speed directive (2026-07-12): per-milestone two-agent adversarial reviews consolidated into one final fresh-context review at M10 (DoD line 9); integrator self-review continues per milestone. Trade-off: later defect discovery, accepted for velocity.
+
+## M3 mistake ledger additions
+- Wave agents wrote repo-root path walks that break in-container (results.json at /); fixed with tests/_paths.py + mounts. Class: host-container path assumption, second instance (first: INLEGALBERT sha path). Rule adopted: any test referencing repo artifacts outside backend/ goes through _paths.py.

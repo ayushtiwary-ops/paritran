@@ -26,7 +26,7 @@ CORPUS_V1 = {
     "IT Act 43": "Damage to computer or system; unauthorised access, downloading or introduction of a contaminant.",
 }
 
-RESULTS_JSON = Path(__file__).resolve().parents[2] / "results.json"
+from _paths import ORACLE_RESULTS as RESULTS_JSON
 
 
 @pytest.fixture()
@@ -118,7 +118,12 @@ def test_gate_rule_catches_invention_and_paraphrase(gate_v1):
 def test_gate_rule_is_case_insensitive_verbatim_substring(gate_v1):
     assert gate_v1.check("BNS 318", "DISHONESTLY INDUCING DELIVERY OF PROPERTY")
     assert gate_v1.check("BNS 318", "  dishonestly inducing delivery of property  ")
-    assert not gate_v1.check("BNS 318", "dishonestly  inducing delivery of property")
+    # Whitespace-normalized (SPEC 6.8): wrapped statute text folds, so runs
+    # of spaces or newlines in the quote still match; tokens must be exact.
+    assert gate_v1.check("BNS 318", "dishonestly  inducing delivery of property")
+    assert gate_v1.check("BNS 318", "dishonestly inducing\ndelivery of property")
+    assert not gate_v1.check("BNS 318", "dishonestly inducing delivery of assets")
+    assert not gate_v1.check("BNS 318", "")
 
 
 def test_unlabelled_evaluate_defaults_to_stub_label(gate_v1):
