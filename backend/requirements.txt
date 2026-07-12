@@ -22,3 +22,6 @@ pdfplumber==0.11.10
 pytesseract==0.3.13
 Pillow==12.3.0
 indic-nlp-library==0.92
+PyJWT==2.13.0
+slowapi==0.1.10
+python-multipart==0.0.32

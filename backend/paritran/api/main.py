@@ -1,6 +1,6 @@
 """Paritran API application.
 
-This milestone (Milestone 1, repo skeleton) exposes:
+Milestone 4 surface:
 
 - GET /health: 200 when the database is reachable, else 503. Ollama or
   model-file failures are reported per component but do not fail health,
@@ -11,24 +11,40 @@ This milestone (Milestone 1, repo skeleton) exposes:
 - GET /ready: 200 only when db, ollama, and model files are all ok.
 - GET /metrics: Prometheus scrape endpoint via
   prometheus-fastapi-instrumentator (SPEC section 12).
+- The SPEC 9.1 REST routers (auth, intake, runs, networks, cases,
+  decisions, audit, evaluation) and the SPEC 9.2 SSE channels. Deferred
+  by milestone plan: /api/demo/* (M9) and /api/security/posture (M7).
+- slowapi rate limiting keyed by JWT sub with role budgets (SPEC 5):
+  officer/supervisor 120/min, auditor 60/min, anonymous 20/min. The
+  public health/ready/metrics probes are not part of the API budget.
+- A request-latency ring buffer (middleware below) feeding the honest
+  p50/p95 numbers on the /api/stream/status ticks; empty means null,
+  never an invented number.
 
 Every component check is capped at 2 seconds (SPEC 9.1 and 12).
-The routers of SPEC section 9.1 and the SSE channels of 9.2 are
-deferred to Milestone 4. OpenTelemetry FastAPIInstrumentor wiring is
-deferred to Milestone 8 (observability).
+OpenTelemetry FastAPIInstrumentor wiring is deferred to Milestone 8
+(observability).
 """
 
 import asyncio
 import logging
+import math
+import time
+from collections import deque
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 import httpx
 import psycopg
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from prometheus_fastapi_instrumentator import Instrumentator
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
+from paritran.api import auth, sse
+from paritran.api.deps import limiter
+from paritran.api.routers import ALL_ROUTERS
 from paritran.config import get_settings
 from paritran.db import repo
 from paritran.db.migrate import run_migrations
@@ -37,6 +53,11 @@ from paritran.db.seed import seed_users
 logger = logging.getLogger(__name__)
 
 CHECK_TIMEOUT_SECONDS = 2.0
+
+# Ring buffer of recent request latencies (ms). Sized for the demo's
+# request volume; the status stream reads percentiles from it.
+LATENCY_RING_SIZE = 1024
+REQUEST_LATENCIES_MS: deque = deque(maxlen=LATENCY_RING_SIZE)
 
 
 @asynccontextmanager
@@ -107,7 +128,45 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Rate limiting (SPEC 5): every API route is decorated with
+# limiter.limit(role_rate_limit); this wires storage and the 429 handler.
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+
+@app.middleware("http")
+async def _record_request_latency(request: Request, call_next):
+    """Feed the latency ring buffer (SPEC 12, status.tick p50/p95).
+
+    For streaming responses this measures time to response start, which
+    is the honest per-request number for an SSE endpoint.
+    """
+    t0 = time.perf_counter()
+    response = await call_next(request)
+    REQUEST_LATENCIES_MS.append(round((time.perf_counter() - t0) * 1000, 3))
+    return response
+
+
+def latency_percentiles() -> dict:
+    """p50/p95 over the ring buffer; nulls when nothing was recorded."""
+    data = sorted(REQUEST_LATENCIES_MS)
+    if not data:
+        return {"count": 0, "p50_ms": None, "p95_ms": None}
+
+    def pct(p: float) -> float:
+        idx = min(len(data) - 1, max(0, math.ceil(p / 100 * len(data)) - 1))
+        return data[idx]
+
+    return {"count": len(data), "p50_ms": pct(50), "p95_ms": pct(95)}
+
+
 Instrumentator().instrument(app).expose(app)
+
+# SPEC 9.1 REST surface + SPEC 9.2 SSE channels (Milestone 4).
+app.include_router(auth.router)
+for _router in ALL_ROUTERS:
+    app.include_router(_router)
+app.include_router(sse.router)
 
 
 async def check_db() -> dict[str, str]:
