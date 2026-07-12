@@ -71,3 +71,9 @@ Short entries, newest last. This file plus SPEC.md is the durable context across
 
 ## M3 mistake ledger additions
 - Wave agents wrote repo-root path walks that break in-container (results.json at /); fixed with tests/_paths.py + mounts. Class: host-container path assumption, second instance (first: INLEGALBERT sha path). Rule adopted: any test referencing repo artifacts outside backend/ goes through _paths.py.
+
+## 2026-07-12 (M5-M8 closed)
+42. M5+M6 frontend: shell+auth+palette+status widget, 4 hero screens (Discovery force-graph, Case File money-trail+packet+F9, Custody chain+tamper, Evaluation reproduce+judge-seed). All live-verified in browser, tsc+build green, SPEC-17 grep clean, zero console errors. Deps pinned exact: react-query 5.101.2, react-router 7.18.1, cmdk 1.1.1, react-force-graph-2d 1.29.1, react-countup 6.5.3, motion 12.42.2.
+43. M7 security: 6 scanners run real (pip-audit/npm/bandit/semgrep/gitleaks/trivy/grype). 0 fixable criticals. Accepted risks in SECURITY.md: torch/transformers CVEs (no upstream fix), trivy-image base-OS glib/perl criticals (fixed:none). Posture endpoint live: real scanner counts + config audit + live egress self-test (open now, blocks Wi-Fi-off at venue). Security.tsx + ci.yml bandit/semgrep/trivy gates.
+44. M8 observability: OTel FastAPIInstrumentor (import-guarded no-op safe), custom metrics live (paritran_runs_total, paritran_f9_verdicts_total{verdict,generator}, paritran_audit_chain_head_info anchor per SPEC 8.4). Grafana dashboard uid paritran-observability, 8 panels. Verified: /metrics shows paritran_* after live run; chain-head hash matches audit_log row.
+45. Compose gained /oracle/scans mount + PARITRAN_SCANS_DIR (agent added). Ollama timeout 120s (cold-load).

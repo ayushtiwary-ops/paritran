@@ -10,12 +10,34 @@ trigger of SPEC 7.2 owns prev_hash and hash; Python never computes or
 supplies either value. verify_chain delegates to the SQL function
 verify_audit_chain() for the same reason: one canonical encoding, in
 one place, in the database.
+
+Milestone 8 (SPEC 8.4, 12): after every successful append the row's
+{seq, hash, prev_hash} is handed to the registered append hooks so the
+API layer can refresh the out-of-band chain-head anchor metric. Hooks
+observe; they never gate. A hook failure is logged and swallowed so
+observability can never break a custody write.
 """
+
+import logging
+from typing import Callable
 
 from psycopg.types.json import Jsonb
 from psycopg_pool import AsyncConnectionPool
 
+log = logging.getLogger(__name__)
+
 _pool: AsyncConnectionPool | None = None
+
+# Post-append observers (Milestone 8): each receives the appended row's
+# {seq, hash, prev_hash}. Module-level so registration survives app
+# factories; list order is registration order.
+_APPEND_HOOKS: list[Callable[[dict], None]] = []
+
+
+def register_append_hook(hook: Callable[[dict], None]) -> None:
+    """Register a post-append observer; idempotent per function object."""
+    if hook not in _APPEND_HOOKS:
+        _APPEND_HOOKS.append(hook)
 
 
 async def init_pool(dsn: str) -> AsyncConnectionPool:
@@ -57,6 +79,29 @@ async def append_audit(actor: str, action: str, payload: dict) -> dict:
             (actor, action, Jsonb(payload)),
         )
         row = await cursor.fetchone()
+    result = {"seq": row[0], "hash": row[1], "prev_hash": row[2]}
+    for hook in list(_APPEND_HOOKS):
+        try:
+            hook(result)
+        except Exception:  # noqa: BLE001 - observers never break custody writes
+            log.warning("audit append hook %r failed", hook, exc_info=True)
+    return result
+
+
+async def get_chain_head() -> dict | None:
+    """Latest audit row as {seq, hash, prev_hash}; None when the chain is empty.
+
+    Used at startup to prime the SPEC 8.4 chain-head anchor metric before
+    the first in-process append fires the hooks.
+    """
+    pool = await _acquire_pool()
+    async with pool.connection() as conn:
+        cursor = await conn.execute(
+            "SELECT seq, hash, prev_hash FROM audit_log ORDER BY seq DESC LIMIT 1"
+        )
+        row = await cursor.fetchone()
+    if row is None:
+        return None
     return {"seq": row[0], "hash": row[1], "prev_hash": row[2]}
 
 

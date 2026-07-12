@@ -38,6 +38,8 @@ import threading
 import time
 import uuid
 
+from prometheus_client import Counter
+
 from paritran import pipeline
 from paritran.config import get_settings
 from paritran.db.persist import persist_run
@@ -64,6 +66,23 @@ log = logging.getLogger(__name__)
 
 # SSE streams close after forwarding one of these (SPEC 9.3).
 TERMINAL_EVENTS = ("run.completed", "run.failed")
+
+# Milestone 8 custom metrics (SPEC 12). Registered on the prometheus_client
+# default registry, which prometheus-fastapi-instrumentator already exposes
+# at /metrics; module-level so they register exactly once per process.
+RUNS_TOTAL = Counter(
+    "paritran_runs",
+    "Pipeline runs started via POST /api/intake/run, by requested generator.",
+    ["generator"],
+)
+F9_VERDICTS_TOTAL = Counter(
+    "paritran_f9_verdicts",
+    "F9 gate claim verdicts from completed pipeline runs, by verdict "
+    "(PASSED/WITHHELD) and by the generator the result was actually "
+    "produced with (F9Result.generator_name, so an ollama request that "
+    "degraded to the stub is honestly counted under the stub's name).",
+    ["verdict", "generator"],
+)
 
 
 @dataclasses.dataclass
@@ -181,6 +200,16 @@ def _execute_and_persist(entry: RunEntry, sink) -> None:
     entry.artifacts = artifacts
     entry.results = results
 
+    # F9 verdict counters (SPEC 12): incremented exactly where the F9
+    # result lands in the runstore, one per gated claim. prometheus_client
+    # counters are thread-safe, so incrementing on this worker thread is
+    # fine.
+    f9 = artifacts.f9_result
+    for verdict in f9.verdicts:
+        F9_VERDICTS_TOTAL.labels(
+            verdict=verdict.verdict, generator=f9.generator_name
+        ).inc()
+
     dsn = get_settings().DATABASE_URL
     try:
         entry.db_run_id = persist_run(
@@ -213,6 +242,7 @@ async def start_run(seed: int, generator: str) -> RunEntry:
     """
     entry = RunEntry(run_id=uuid.uuid4().hex, seed=seed, generator=generator)
     _runs[entry.run_id] = entry
+    RUNS_TOTAL.labels(generator=generator).inc()
     _append(entry, "run.started", None, {"seed": seed, "generator": generator})
 
     loop = asyncio.get_running_loop()

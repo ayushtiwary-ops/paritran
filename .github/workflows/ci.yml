@@ -76,10 +76,20 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      # Each --ignore-vuln below is an accepted risk documented with
+      # owner and rationale in docs/SECURITY.md section 6 (torch and
+      # transformers pins frozen for the seed-42 measurement contract;
+      # several have no upstream fix). Any NEW advisory still fails.
       - name: Audit backend dependencies
         run: |
           pip install pip-audit==2.9.0
-          pip-audit -r backend/requirements.txt
+          pip-audit -r backend/requirements.txt \
+            --ignore-vuln PYSEC-2026-139 \
+            --ignore-vuln CVE-2025-3000 \
+            --ignore-vuln CVE-2025-3001 \
+            --ignore-vuln PYSEC-2025-217 \
+            --ignore-vuln CVE-2026-1839 \
+            --ignore-vuln CVE-2026-4372
 
   gitleaks:
     runs-on: ubuntu-latest
@@ -91,4 +101,50 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-# Trivy, Grype, Semgrep, Bandit land in Milestone 7 per SPEC section 11.
+  bandit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Bandit (fail on high or above)
+        run: |
+          pip install bandit==1.9.4
+          bandit -r backend/paritran --severity-level high
+
+  semgrep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      # The two --exclude-rule entries are triaged false positives
+      # documented in docs/SECURITY.md section 6 (migration runner
+      # executing repo-controlled SQL; Flask rule firing on slowapi's
+      # internal limiter key). Everything else fails the job.
+      - name: Semgrep (--config auto, any finding fails the job)
+        run: |
+          pip install semgrep==1.169.0
+          semgrep scan --config auto --error \
+            --exclude-rule python.sqlalchemy.security.sqlalchemy-execute-raw-query.sqlalchemy-execute-raw-query \
+            --exclude-rule python.flask.security.audit.directly-returned-format-string.directly-returned-format-string \
+            backend/paritran frontend/src src
+
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy filesystem scan (exit 1 on CRITICAL)
+        # 0.35.0 minimum: grype flags GHSA-69fq-xp46-6x23 on earlier tags.
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL
+          exit-code: "1"
+
+# Grype has no CI job by design: it runs locally (and at the venue) via
+# infra/scans/run_all.sh, which is the offline demo-day source of truth
+# for the full scanner suite (SPEC section 11).

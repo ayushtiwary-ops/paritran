@@ -1,7 +1,6 @@
-"""REST routers for SPEC 9.1 (Milestone 4).
+"""REST routers for SPEC 9.1 (Milestones 4 and 7).
 
-Deliberately absent (deferred, SPEC 18): ``/api/demo/*`` (Milestone 9)
-and ``/api/security/posture`` (Milestone 7).
+Deliberately absent (deferred, SPEC 18): ``/api/demo/*`` (Milestone 9).
 """
 
 from paritran.api.routers import (  # noqa: F401
@@ -12,6 +11,7 @@ from paritran.api.routers import (  # noqa: F401
     intake,
     networks,
     runs,
+    security,
 )
 
 ALL_ROUTERS = (
@@ -22,4 +22,5 @@ ALL_ROUTERS = (
     decisions.router,
     audit.router,
     evaluation.router,
+    security.router,
 )

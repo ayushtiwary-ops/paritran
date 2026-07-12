@@ -1,9 +1,8 @@
 /**
  * Route table (react-router v7 data router).
  *
- * Screens per SPEC 10.3. Security Posture lands in Milestone 7; until
- * then its route renders the honest ComingNext placeholder so no
- * navigation dead-ends.
+ * Screens per SPEC 10.3, all six live. The catch-all keeps the honest
+ * ComingNext treatment so no navigation dead-ends.
  */
 
 import { createBrowserRouter } from "react-router";
@@ -16,6 +15,7 @@ import { Custody } from "./screens/Custody";
 import { Discovery } from "./screens/Discovery";
 import { Evaluation } from "./screens/Evaluation";
 import { Login } from "./screens/Login";
+import { Security } from "./screens/Security";
 
 const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -31,19 +31,7 @@ const router = createBrowserRouter([
       { path: "casefile", element: <CaseFile /> },
       { path: "custody", element: <Custody /> },
       { path: "evaluation", element: <Evaluation /> },
-      {
-        path: "security",
-        element: (
-          <ComingNext
-            title="Security Posture"
-            milestone="Milestone 7"
-            summary={
-              "OWASP coverage checklist, scanner artifact summaries, and" +
-              " the egress self-test panel from /api/security/posture."
-            }
-          />
-        ),
-      },
+      { path: "security", element: <Security /> },
       {
         path: "*",
         element: (

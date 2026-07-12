@@ -25,3 +25,7 @@ indic-nlp-library==0.92
 PyJWT==2.13.0
 slowapi==0.1.10
 python-multipart==0.0.32
+opentelemetry-api==1.43.0
+opentelemetry-sdk==1.43.0
+opentelemetry-instrumentation-fastapi==0.64b0
+prometheus-client==0.25.0

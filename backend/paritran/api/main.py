@@ -12,8 +12,8 @@ Milestone 4 surface:
 - GET /metrics: Prometheus scrape endpoint via
   prometheus-fastapi-instrumentator (SPEC section 12).
 - The SPEC 9.1 REST routers (auth, intake, runs, networks, cases,
-  decisions, audit, evaluation) and the SPEC 9.2 SSE channels. Deferred
-  by milestone plan: /api/demo/* (M9) and /api/security/posture (M7).
+  decisions, audit, evaluation, security) and the SPEC 9.2 SSE
+  channels. Deferred by milestone plan: /api/demo/* (M9).
 - slowapi rate limiting keyed by JWT sub with role budgets (SPEC 5):
   officer/supervisor 120/min, auditor 60/min, anonymous 20/min. The
   public health/ready/metrics probes are not part of the API budget.
@@ -22,8 +22,21 @@ Milestone 4 surface:
   never an invented number.
 
 Every component check is capped at 2 seconds (SPEC 9.1 and 12).
-OpenTelemetry FastAPIInstrumentor wiring is deferred to Milestone 8
-(observability).
+
+Milestone 8 observability (SPEC 12, 8.4):
+
+- OpenTelemetry FastAPIInstrumentor wiring, import-guarded: when the
+  opentelemetry packages are absent the app runs identically, and when
+  present but no tracer provider/exporter is configured the OTel API
+  hands out no-op spans, so the wiring adds no exporter, no background
+  thread, and no egress (SPEC section 2).
+- prometheus-fastapi-instrumentator now also exposes the
+  http_requests_inprogress gauge (labelled by method and handler).
+- Custom paritran_* metrics: paritran_runs_total and
+  paritran_f9_verdicts_total live in runstore next to the state they
+  count; paritran_audit_chain_head_info (the SPEC 8.4 out-of-band
+  anchor) is defined here, primed from the last audit row at startup,
+  and refreshed on every append via the repo append hook.
 """
 
 import asyncio
@@ -38,6 +51,7 @@ import httpx
 import psycopg
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from prometheus_client import Info
 from prometheus_fastapi_instrumentator import Instrumentator
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -95,6 +109,21 @@ async def lifespan(app: FastAPI):
     # and opens lazily, so environments without a database are unaffected,
     # while deployments that migrate externally still get working routers.
     await repo.init_pool(settings.DATABASE_URL)
+    if settings.RUN_MIGRATIONS_ON_STARTUP:
+        # Prime the SPEC 8.4 chain-head anchor metric from the last audit
+        # row, so the anchor is exposed from the first scrape and not only
+        # after the first in-process append fires the repo hook. Gated on
+        # the migration flag because it implies a reachable database;
+        # unit-test environments skip it. Failure is logged, never fatal.
+        try:
+            head = await asyncio.wait_for(
+                repo.get_chain_head(), timeout=CHECK_TIMEOUT_SECONDS
+            )
+        except Exception as exc:  # noqa: BLE001 - observability must not gate boot
+            logger.warning("audit chain head metric not primed: %s", exc)
+        else:
+            if head is not None:
+                _refresh_chain_head_metric(head)
     yield
     await repo.close_pool()
 
@@ -160,7 +189,60 @@ def latency_percentiles() -> dict:
     return {"count": len(data), "p50_ms": pct(50), "p95_ms": pct(95)}
 
 
-Instrumentator().instrument(app).expose(app)
+Instrumentator(
+    # SPEC 12 dashboard needs the in-progress gauge; labels give the
+    # per-handler breakdown (metric: http_requests_inprogress).
+    should_instrument_requests_inprogress=True,
+    inprogress_labels=True,
+).instrument(app).expose(app)
+
+
+def _wire_opentelemetry(target: FastAPI) -> bool:
+    """OpenTelemetry FastAPIInstrumentor wiring (SPEC 12, Milestone 8).
+
+    Import-guarded: without the opentelemetry packages installed the app
+    runs identically and this returns False. When wired, span creation
+    goes through the OTel API's global tracer provider; until a
+    deployment configures an SDK provider with an exporter, that is the
+    no-op/proxy provider, so no spans are recorded, no thread is
+    started, and nothing leaves the process (SPEC section 2 zero
+    egress). Never raises: observability wiring must not take the API
+    down.
+    """
+    try:
+        from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    except ImportError as exc:
+        logger.info("OpenTelemetry not installed; tracing not wired (%s)", exc)
+        return False
+    try:
+        FastAPIInstrumentor.instrument_app(target)
+    except Exception as exc:  # noqa: BLE001 - never let tracing wiring kill boot
+        logger.warning("OpenTelemetry wiring failed; continuing without: %s", exc)
+        return False
+    logger.info("OpenTelemetry FastAPIInstrumentor wired")
+    return True
+
+
+OTEL_WIRED = _wire_opentelemetry(app)
+
+# SPEC 8.4 out-of-band anchor: the current audit chain head, exposed as
+# paritran_audit_chain_head_info{head_hash=..., seq=...} 1. An Info metric
+# replaces its label set on every refresh, so exactly one head is ever
+# exposed. Refreshed on every audit append (repo hook below) and primed
+# from the last audit row in lifespan.
+AUDIT_CHAIN_HEAD = Info(
+    "paritran_audit_chain_head",
+    "Current audit_log chain head observed by this API process "
+    "(SPEC 8.4 out-of-band anchor): head_hash and seq of the latest row.",
+)
+
+
+def _refresh_chain_head_metric(row: dict) -> None:
+    """Repo append hook: expose the freshly appended row as the chain head."""
+    AUDIT_CHAIN_HEAD.info({"head_hash": str(row["hash"]), "seq": str(row["seq"])})
+
+
+repo.register_append_hook(_refresh_chain_head_metric)
 
 # SPEC 9.1 REST surface + SPEC 9.2 SSE channels (Milestone 4).
 app.include_router(auth.router)

@@ -45,12 +45,14 @@ services:
       SOUND_DEFAULT: ${SOUND_DEFAULT}
       PARITRAN_RESULTS_JSON: /oracle/results.json
       PARITRAN_SAMPLES_DIR: /oracle/samples
+      PARITRAN_SCANS_DIR: /oracle/scans
     volumes:
       - ${INLEGALBERT_HOST_DIR}:/models/InLegalBERT:ro
       # Single-source-of-truth oracle and bundled samples for the in-container
       # test suite (SPEC 17 step 3); backend/ alone is the build context.
       - ./results.json:/oracle/results.json:ro
       - ./dataset/samples:/oracle/samples:ro
+      - ./infra/scans/out:/oracle/scans:ro
     networks:
       - core
       - edge
