@@ -85,3 +85,6 @@ Short entries, newest last. This file plus SPEC.md is the durable context across
 47. CRITICAL fixed: live Ollama F9 echoed prompt brackets "[BNS 111]"; parse_claims now strips surrounding [...] so valid citations gate correctly. Was 6/0 all false invented_section (kill-shot #2 exposure); now 5 passed/1 withheld (real paraphrase), 0 leaked. Test added.
 48. MAJOR fixed: JWT_SECRET added to _reject_degenerate_secrets startup guard (empty/CHANGE_ME/<32char rejected) matching password hardening.
 49. MINOR fixed: runstore _runs (cap 64) + demo _demos (cap 32) LRU-evicted, artifacts freed, so scripted run bursts cannot OOM the on-prem box.
+
+## 2026-07-13 (M10 closed, build complete)
+50. M10 polish done + demo-day runbook written. Final DoD sweep on rebuilt prod stack (all 5 services from clean `down -v`): clean bring-up 13s all-healthy; 191 in-container tests green; reproduction gate exact; prototype standalone deterministic; frontend truth-grep clean; scanners 0 fixable criticals (3 base-OS accepted-risk documented); grafana dashboard provisioned; /metrics custom metrics live; demo playwright 34s<90s zero console errors; prod web :8081 renders. Fresh-context adversarial review (2 lenses) returned 3 real findings, all fixed (live-Ollama bracket strip = kill-shot #2 now honest, JWT_SECRET guard, registry LRU caps). BUILD COMPLETE.
