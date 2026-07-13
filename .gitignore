@@ -8,3 +8,8 @@ dist/
 infra/scans/out/
 .venv/
 *.egg-info/
+# Playwright output + deck-capture tooling (not part of the product)
+test-results/
+playwright-report/
+/frontend/capture/
+/frontend/playwright.capture.config.ts
