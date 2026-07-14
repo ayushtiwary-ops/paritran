@@ -1,0 +1,91 @@
+name: webapp-parity
+
+# The freeze for the hosted interactive solution (SPEC_HOSTED_APP.md, A7).
+# Once this is green, no toolchain bump, CDN swap, or networkx change for the
+# 13 days before the finale. It asserts, on every push touching the app:
+#   - results.json is still frozen (sha starts 893fd3)
+#   - the committed engine + baseline copies are byte-identical to source
+#   - the Pyodide loadPackage guard holds and the version pin is present (A6)
+#   - no banned vocabulary or em dash in the authored app files (A10)
+#   - the browser reproduces results.json at seed 42, field by field (A4)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/src/replay/**"
+      - "frontend/replay.html"
+      - "frontend/vite.replay.config.ts"
+      - "frontend/playwright.webapp.config.ts"
+      - "frontend/e2e-webapp/**"
+      - "docs/app/**"
+      - "src/paritran_prototype.py"
+      - "results.json"
+      - ".github/workflows/webapp-parity.yml"
+  pull_request:
+    paths:
+      - "frontend/src/replay/**"
+      - "docs/app/**"
+      - "src/paritran_prototype.py"
+      - "results.json"
+  workflow_dispatch:
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: results.json is frozen (sha starts 893fd3)
+        run: |
+          sha=$(sha256sum results.json | cut -d' ' -f1)
+          echo "results.json sha: $sha"
+          case "$sha" in
+            893fd3*) echo "frozen OK" ;;
+            *) echo "results.json changed; the frozen baseline must never move"; exit 1 ;;
+          esac
+
+      - name: Engine and baseline copies are byte-identical to source (A7a)
+        run: |
+          cmp src/paritran_prototype.py docs/app/py/paritran_prototype.py
+          cmp results.json docs/app/py/results.reference.json
+          echo "byte-identical OK"
+
+      - name: Wheel-URL guard and version pin (A6)
+        run: |
+          echo "loadPackage calls:"; grep -rn "loadPackage(" frontend/src/replay/ || true
+          if grep -rnE "loadPackage\((['\"])networkx" frontend/src/replay/; then
+            echo "FAIL: loadPackage('networkx') by name pulls the matplotlib closure"; exit 1; fi
+          grep -rq "v314.0.2" frontend/src/replay/ || { echo "FAIL: version pin missing"; exit 1; }
+          if grep -rnE "pyodide/latest" frontend/src/replay/; then echo "FAIL: unpinned CDN url"; exit 1; fi
+          echo "A6 OK"
+
+      - name: Banned vocabulary and em dash in authored app files (A10)
+        run: |
+          # Authored surfaces only: our source, the rendered HTML, the engine copy,
+          # and any recorded replay JSON. Minified third-party bundles under assets/
+          # (React ships an html-attribute table that literally contains "seamless")
+          # and the Pyodide vendor/ tree are excluded, exactly as vendor/ is.
+          targets="frontend/src/replay docs/app/index.html docs/app/py docs/app/replay"
+          if grep -rIiE 'cutting.edge|revolutionary|seamless|ai.powered|disruptive|game.changer|transformative|world.class|state.of.the.art|unlock|empower|hallucinat' $targets; then
+            echo "FAIL: banned vocabulary in an authored app file"; exit 1; fi
+          if grep -rIl $'\xe2\x80\x94' $targets; then
+            echo "FAIL: em dash (U+2014) in an authored app file"; exit 1; fi
+          echo "A10 OK"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install and build the webapp
+        working-directory: frontend
+        run: |
+          npm ci
+          npx vite build -c vite.replay.config.ts
+          mv -f ../docs/app/replay.html ../docs/app/index.html
+
+      - name: Browser reproduces results.json at seed 42, field by field (A4)
+        working-directory: frontend
+        run: |
+          npx playwright install --with-deps chromium
+          npx playwright test -c playwright.webapp.config.ts

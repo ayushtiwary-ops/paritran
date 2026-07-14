@@ -38,3 +38,12 @@ preflight:
 	if ollama list >/dev/null 2>&1; then echo "ollama: reachable"; else echo "ollama: NOT reachable (ollama list failed)"; ok=0; fi; \
 	if $(COMPOSE) config -q; then echo "compose config: valid"; else echo "compose config: INVALID"; ok=0; fi; \
 	[ "$$ok" = "1" ] && echo "preflight: PASS" || { echo "preflight: FAIL"; exit 1; }
+
+# W1: build the hosted interactive solution into docs/app (SPEC_HOSTED_APP.md).
+# Rebuilds only the Vite output (index.html + assets/); the committed vendor/,
+# py/, and replay/ trees under docs/app are preserved (emptyOutDir false).
+webapp:
+	rm -rf docs/app/assets
+	cd frontend && npx vite build -c vite.replay.config.ts
+	mv -f docs/app/replay.html docs/app/index.html
+	@echo "webapp built -> docs/app/index.html"
