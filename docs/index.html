@@ -4,76 +4,58 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paritran &middot; From complaint to conviction</title>
-<meta name="description" content="Paritran is an admissible-evidence engine for the Cyber Crime Branch. From complaint to conviction.">
-<style>
-  :root{
-    --navy:#0A1F44; --steel:#1E3A6B; --teal:#2E7273; --gold:#A87229;
-    --oxblood:#7A2E2E; --forest:#2D6A4F; --muted:#87847A; --surf:#FBFAF6;
-  }
-  *{box-sizing:border-box} html{scroll-behavior:smooth}
-  body{margin:0;background:var(--surf);color:var(--navy);
-       font-family:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.55}
-  .serif{font-family:'IBM Plex Serif',Georgia,'Times New Roman',serif}
-  .mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
-  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
-
-  /* hero */
-  header{background:var(--navy);color:var(--surf);padding:88px 0 72px}
-  .kicker{color:#9fb0cf;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
-  h1{font-size:64px;margin:14px 0 6px;font-weight:700;letter-spacing:.01em}
-  .tag{color:var(--gold);letter-spacing:.22em;text-transform:uppercase;font-size:14px}
-  .hero-stat{margin-top:40px;display:flex;align-items:baseline;gap:20px;flex-wrap:wrap}
-  .big{font-size:88px;line-height:.9;color:var(--surf)} .big .u{color:var(--gold)}
-  .hero-stat p{max-width:420px;color:#c9d2e4;margin:0}
-  .cta{display:inline-block;margin-top:36px;background:var(--gold);color:var(--navy);
-       font-weight:600;padding:13px 22px;border-radius:8px}
-  .cta.ghost{background:transparent;color:var(--surf);border:1px solid #3a4f78;margin-left:10px}
-
-  section{padding:64px 0;border-bottom:1px solid #e7e3d6}
-  h2{font-size:30px;margin:0 0 6px} .lead{color:var(--muted);margin:0 0 28px;max-width:720px}
-
-  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-  .card{background:#fff;border:1px solid #e2ddcd;border-radius:10px;padding:18px}
-  .card .n{font-size:34px;font-weight:700} .card .n.ox{color:var(--oxblood)}
-  .card .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
-
-  .pipe{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .step{background:#fff;border:1px solid #e2ddcd;border-left:4px solid var(--navy);border-radius:8px;padding:14px}
-  .step:nth-child(6),.step:nth-child(5){border-left-color:var(--teal)}
-  .step:nth-child(8){border-left-color:var(--oxblood)}
-  .step:nth-child(9){border-left-color:var(--forest)}
-  .step b{display:block} .step span{color:var(--muted);font-size:13px}
-
-  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e2ddcd;border-radius:10px;overflow:hidden}
-  th,td{padding:12px 14px;text-align:left;border-bottom:1px solid #eee;font-size:14px}
-  th{background:var(--navy);color:var(--surf);font-weight:600}
-  td .m{color:var(--forest);font-weight:600}
-
-  .moat{background:var(--navy);color:var(--surf);border-radius:12px;padding:28px}
-  .moat b{color:var(--gold)}
-  footer{padding:40px 0;color:var(--muted);font-size:13px}
-  @media(max-width:820px){.cards,.pipe{grid-template-columns:1fr 1fr}h1{font-size:44px}.big{font-size:64px}}
-</style>
+<meta name="description" content="An on-premise, zero-egress engine that turns cyber-fraud complaints into a court-admissible case file. Every number measured, reproducible, and checkable.">
+<link rel="icon" href="assets/img/favicon.svg">
+<meta property="og:title" content="Paritran &middot; From complaint to conviction">
+<meta property="og:description" content="Detection tools catch the fraud. Paritran builds the case file that survives a courtroom. On one machine, with zero internet, every number checkable.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ayushtiwary-ops.github.io/paritran/">
+<meta property="og:image" content="https://ayushtiwary-ops.github.io/paritran/assets/img/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
-<header>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="top">
+  <div class="wrap navbar">
+    <a class="brand-min serif" href="#top">Paritran</a>
+    <nav class="navlinks" aria-label="Sections">
+      <a href="#problem">Problem</a>
+      <a href="#watch">Watch it work</a>
+      <a href="#how">How</a>
+      <a href="#proof">Proof</a>
+      <a href="#security">Security</a>
+      <a href="#everything">Everything</a>
+      <a href="#results">Results</a>
+    </nav>
+    <a class="btn-gold" href="https://ayushtiwary-ops.github.io/paritran/app/">Open the walkthrough</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- S1 Hero -->
+<header class="hero">
   <div class="wrap">
     <div class="kicker">KANAD S.H.I.E.L.D. 2026 &middot; Cyber Crime Branch, Ahmedabad City Police</div>
     <h1 class="serif">Paritran</h1>
     <div class="tag">From complaint to conviction</div>
     <div class="hero-stat">
       <div class="big serif">1.6<span class="u">%</span></div>
-      <p>the cybercrime conviction rate India is stuck at. Paritran is built to move it. We build the court-ready case file that detection tools never produce.</p>
+      <p>Detection tools catch the fraud. Paritran builds the case file that survives a courtroom. On one machine, with zero internet, and every number checkable.</p>
     </div>
-    <div>
-      <a class="cta" href="#pilot">Pilot with the Branch</a>
-      <a class="cta ghost" href="#results">See the results</a>
+    <p class="hero-gloss">Out of every 1,000 cybercrime cases in India, about 16 end in a conviction. Paritran exists to raise that number.</p>
+    <div class="cta-row">
+      <a class="btn-gold" href="https://ayushtiwary-ops.github.io/paritran/app/">Open the interactive walkthrough</a>
+      <a class="btn-ghost" href="#watch">Watch the 90-second demo</a>
+      <a class="btn-ghost" href="#results">See the measured results</a>
     </div>
   </div>
 </header>
 
-<section>
+<!-- S2 Problem -->
+<section id="problem">
   <div class="wrap">
     <h2>Detection is crowded. Conviction is empty.</h2>
     <p class="lead">India catches cyber fraud and then loses it in court. The national stack handles detection and freezing. The courtroom packet, where one officer turns a stack of small complaints into a case that holds up, is empty.</p>
@@ -83,75 +65,351 @@
       <div class="card"><div class="n serif">18%</div><div class="k">Cybercrime chargesheeting rate</div></div>
       <div class="card"><div class="n serif ox">1.6%</div><div class="k">Cybercrime conviction rate</div></div>
     </div>
+    <figure class="funnel">
+      <svg viewBox="0 0 820 200" role="img" aria-label="A funnel: 1000 complaints narrow to about 24 police cases, then fewer chargesheets, then about 16 convictions.">
+        <g font-family="var(--font-mono)" font-size="13">
+          <rect x="10" y="20" width="800" height="34" rx="4" fill="#1E3A6B"></rect><text x="20" y="42" fill="#FBFAF6">1,000 complaints</text>
+          <rect x="90" y="66" width="640" height="34" rx="4" fill="#2E7273"></rect><text x="100" y="88" fill="#FBFAF6">about 24 become police cases (2.43% NCRP to FIR)</text>
+          <rect x="200" y="112" width="420" height="34" rx="4" fill="#A87229"></rect><text x="210" y="134" fill="#0A1F44">about 18 reach a chargesheet</text>
+          <rect x="300" y="158" width="220" height="34" rx="4" fill="#7A2E2E"></rect><text x="310" y="180" fill="#FBFAF6">about 16 convictions</text>
+        </g>
+      </svg>
+      <figcaption>Think of a pipe: 1,000 complaints go in one end. Only about 24 become police cases, about 18 become charge sheets, and about 16 come out as convictions. Paritran works on the pipe, not the tap. <span class="prov">Public data, sources below.</span></figcaption>
+    </figure>
   </div>
 </section>
 
-<section>
+<!-- S3 Watch it work -->
+<section id="watch">
+  <div class="wrap">
+    <h2>Watch it work</h2>
+    <p class="lead">One button. The real engine, recorded on the on-premise demo Mac. Measured end to end at 34.2 s, under the 90 s budget, with zero console errors (Playwright e2e).</p>
+    <video class="demo-video" controls playsinline preload="metadata" poster="assets/img/poster.webp">
+      <source src="demo_capture.mp4" type="video/mp4">
+      <source src="demo_capture.webm" type="video/webm">
+      Your browser cannot play the demo video. <a href="demo.html">Open the demo page</a>.
+    </video>
+    <div class="chips" id="beatChips" aria-label="Jump to a beat">
+      <button class="chip" data-t="0">1 Intake <span>the dots stream in</span></button>
+      <button class="chip" data-t="8">2 Collapse 297 to 6 <span>the dots find their gangs</span></button>
+      <button class="chip" data-t="16">3 Money trail to 90.8% <span>follow the money</span></button>
+      <button class="chip" data-t="24">4 Packet + fabrication blocked <span>the lie gets caught</span></button>
+      <button class="chip" data-t="30">5 Tamper test <span>the diary cannot be edited</span></button>
+    </div>
+    <p class="prov">REPLAY: recorded from a real seed-42 run. Full-screen version and the chaptered tour: <a href="demo.html">demo.html</a>. Run the real engine yourself in the <a href="https://ayushtiwary-ops.github.io/paritran/app/">interactive walkthrough</a>.</p>
+  </div>
+</section>
+
+<!-- S4 How it works -->
+<section id="how">
   <div class="wrap">
     <h2>One deterministic core, a fenced language layer</h2>
     <p class="lead">Linkage, money trail, scoring and custody are graph and rule based, so the same input gives the same output every time. The model only summarises cited evidence and drafts documents, and every draft passes the groundedness gate. A SHA-256 chain of custody runs under every stage.</p>
-    <div class="pipe">
-      <div class="step"><b>0 Sovereign ingest</b><span>Hashed on intake</span></div>
-      <div class="step"><b>1 Entity resolution</b><span>Identifiers to entities</span></div>
-      <div class="step"><b>2 Linkage graph</b><span>Mule networks</span></div>
-      <div class="step"><b>3 Money trail</b><span>Layers and freeze points</span></div>
-      <div class="step"><b>4 Predictive triage</b><span>Accounts, not people</span></div>
-      <div class="step"><b>5 Grounded mapping</b><span>BNS and IT Act, cited</span></div>
-      <div class="step"><b>6 Section 63 packet</b><span>Certificate and custody</span></div>
-      <div class="step"><b>7 Groundedness audit</b><span>F9 stays 0</span></div>
-      <div class="step"><b>8 Officer sign-off</b><span>Assist, not decide</span></div>
+    <div class="pipe" id="pipe">
+      <button class="step"><b>0 Ingest</b><span class="s1">Hashed on intake</span><span class="s2">Every complaint gets a fingerprint (SHA-256) the moment it arrives.</span></button>
+      <button class="step"><b>1 Entity resolution</b><span class="s1">Identifiers to entities</span><span class="s2">The same phone number in two complaints means the same actor.</span></button>
+      <button class="step"><b>2 Linkage graph</b><span class="s1">Mule networks</span><span class="s2">297 sticky notes on a wall. String connects any two that share a phone, device, or account. Pull the strings and they clump into 6 tangles.</span></button>
+      <button class="step"><b>3 Money trail</b><span class="s1">Layers and freeze points</span><span class="s2">Follow the marked bill through a relay race of bank accounts. Where the trail breaks is where you freeze.</span></button>
+      <button class="step"><b>4 Triage</b><span class="s1">Accounts, not people</span><span class="s2">ER triage, but for bank accounts. Accounts get scored, never people.</span></button>
+      <button class="step tealstep"><b>5 Grounded mapping</b><span class="s1">BNS and IT Act, cited</span><span class="s2">Three teachers grade the same question separately. Only if all three agree does it count.</span></button>
+      <button class="step tealstep"><b>6 Section 63 packet</b><span class="s1">Certificate and custody</span><span class="s2">The machine fills the court form. The humans sign it. The signature lines stay blank on purpose.</span></button>
+      <button class="step oxstep"><b>7 F9 audit</b><span class="s1">0 ungrounded claims leak</span><span class="s2">Open-book exam: every quote must be found word for word in the law book, or the answer is held back.</span></button>
+      <button class="step foreststep"><b>8 Officer sign-off</b><span class="s1">Assist, not decide</span><span class="s2">The officer decides. Every decision lands in the tamper-evident diary.</span></button>
+    </div>
+    <p class="prov">Hover or tap a stage for the plain-English version. Descriptive, no measured claims.</p>
+  </div>
+</section>
+
+<!-- S5 The collapse -->
+<section id="collapse">
+  <div class="wrap">
+    <h2>297 complaints walk in. 6 criminal networks walk out.</h2>
+    <div class="split">
+      <figure class="collapse-fig">
+        <canvas id="collapseCanvas" width="820" height="520" aria-hidden="true"></canvas>
+        <button class="btn-ghost sm" id="replayCollapse">Replay</button>
+        <p class="a11y">Text equivalent: 297 complaint dots stream in and cluster into 6 colored networks, matching the 6 planted syndicates.</p>
+      </figure>
+      <div class="metrics">
+        <div class="metric"><span class="mv" data-count="297">297</span><span class="mk">complaints</span></div>
+        <div class="metric"><span class="mv">6 of 6</span><span class="mk">networks found</span></div>
+        <div class="metric"><span class="mv" data-count="0.957" data-dp="3">0.957</span><span class="mk">linkage precision</span></div>
+        <div class="metric"><span class="mv" data-count="0.966" data-dp="3">0.966</span><span class="mk">linkage recall</span></div>
+        <div class="metric"><span class="mv" data-count="0.962" data-dp="3">0.962</span><span class="mk">linkage F1</span></div>
+        <p class="prov">REAL, results.json seed 42, measured against known ground truth.</p>
+        <p class="gloss">The data is synthetic with the answers planted, like a test where the teacher already knows the answer key. That is the only honest way to grade yourself: we know exactly which 6 gangs we hid, so we can check the engine found exactly those 6.</p>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- S6 Follow the money -->
+<section id="money">
+  <div class="wrap">
+    <h2>90.8% of the stolen value traced to cash-out</h2>
+    <div class="split">
+      <figure class="trail-fig">
+        <svg id="trailSvg" viewBox="0 0 420 260" role="img" aria-label="Money trail for one real network: victims to layer-1 mules to a layer-2 account to cash-out, all hops intact at seed 42."></svg>
+        <p class="prov">REPLAY: real seed-42 money-ledger reachability for one network. REAL: 90.8% traced overall, results.json.</p>
+      </figure>
+      <div class="metrics">
+        <div class="metric"><span class="mv" data-count="90.8" data-dp="1">90.8</span><span class="mk">percent traced overall</span></div>
+        <p class="gloss">Follow the marked bill hop by hop from victims through mule accounts to cash-out. At seed 42 all six networks trace fully to cash-out. The roughly 9 percent untraced value sits in complaints not yet linked to any network, which are themselves the next leads to chase and freeze.</p>
+        <p class="note-line">Networks are ranked by how much money is still freezable, using a four-term formula shown next to the score. Accounts are scored, never people.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S7 The law -->
+<section id="law">
+  <div class="wrap">
+    <h2>The law, quoted not guessed</h2>
+    <p class="lead">Three independent methods must agree before Paritran calls a legal section HIGH confidence. On agreed cases, measured accuracy is 100.0% (8/8 and 15/15).</p>
+    <div class="split">
+      <figure class="bars-fig">
+        <svg viewBox="0 0 460 250" role="img" aria-label="Mapping decomposition bars: BM25 floor 52.4, full stack 38.1 below the floor, human-routing 61.9 and 75.0, high-confidence 100.0.">
+          <g font-family="var(--font-mono)" font-size="12" fill="#C9D2E4">
+            <text x="0" y="20">Section mapping, golden v1 and extended v2</text>
+            <rect x="0" y="34" width="240" height="20" fill="#2E7273"></rect><text x="248" y="49" fill="#FBFAF6">52.4 floor (BM25 v1)</text>
+            <rect x="0" y="62" width="174" height="20" fill="#1E3A6B"></rect><text x="248" y="77" fill="#FBFAF6">38.1 full stack (below floor)</text>
+            <rect x="0" y="90" width="160" height="20" fill="#1E3A6B"></rect><text x="248" y="105" fill="#FBFAF6">35.0 full stack, extended</text>
+            <rect x="0" y="118" width="283" height="20" fill="#A87229"></rect><text x="291" y="133" fill="#0A1F44">61.9 human-routed, v1</text>
+            <rect x="0" y="146" width="343" height="20" fill="#A87229"></rect><text x="351" y="161" fill="#0A1F44">75.0 human-routed, extended</text>
+            <rect x="0" y="174" width="420" height="20" fill="#2D6A4F"></rect><text x="10" y="189" fill="#FBFAF6">100.0 high-confidence, 8/8 and 15/15</text>
+          </g>
+        </svg>
+        <p class="prov">REAL, live-measured (NOTES entries 38 and 40).</p>
+      </figure>
+      <div class="glosses">
+        <p><b>52.4</b> = plain keyword search alone, our honest floor.</p>
+        <p><b>38.1</b> = with the law-trained model added, it did not beat the floor on this set, and we show it anyway.</p>
+        <p><b>61.9 / 75.0</b> = how often a human is asked to check (the tool escalates when unsure).</p>
+        <p><b>100% (8/8 and 15/15)</b> = when all three methods agree, it has not been wrong in our tests.</p>
+        <p class="gloss">Most systems hide the hard rows. Here is the full decomposition, including the rows where the fuller stack did not beat the baseline. When the three paths agree the answer has never been wrong in our measurements, and when they disagree the case routes to a human officer.</p>
+      </div>
+    </div>
+    <p class="note-line">Every quoted section is the official India Code text, committed with checksums, and a unit test proves every displayed quote appears verbatim in the statute file. The law it quotes is the real law book, and a test refuses to let it print a quote that is not in the book.</p>
+  </div>
+</section>
+
+<!-- S8 The gate -->
+<section id="gate">
+  <div class="wrap">
+    <h2>The gate that catches lies</h2>
+    <p class="lead">Every AI-drafted citation is checked word for word against the statute. Invented ones never leave the building.</p>
+    <div class="split">
+      <div class="rows">
+        <div class="drow"><span class="lab stub">STUB</span> 50 claims, 40 passed, 10 stub fabrications withheld, 0 leaked. A deterministic stand-in that fabricates on purpose, so the gate is demonstrable even with the model off. Frozen in results.json, seed 42.</div>
+        <div class="drow"><span class="lab real">REAL</span> Local gemma3:4b drafted claims: 5 passed, 1 withheld (a real paraphrase caught), 0 leaked. Live-measured. The model runs entirely on the local machine. Zero egress.</div>
+      </div>
+      <div class="widget" id="gateWidget">
+        <div class="wtitle"><span class="lab real">REAL</span> Try the rule yourself</div>
+        <p class="wsub">Computed live in your browser. Illustrative excerpt of BNS Section 318, the same verbatim-containment rule the product enforces.</p>
+        <label for="gateInput" class="wlabel">Citation quote (checked against the statute excerpt):</label>
+        <textarea id="gateInput" rows="3" spellcheck="false"></textarea>
+        <div class="wbtns">
+          <button class="btn-ghost sm" id="gateBreak">Break one word</button>
+          <button class="btn-ghost sm" id="gateReset">Reset</button>
+        </div>
+        <div class="verdict" id="gateVerdict" aria-live="polite"></div>
+        <details class="excerpt"><summary>Show the statute excerpt</summary><p id="gateExcerpt" class="mono"></p></details>
+      </div>
+    </div>
+    <p class="prov small">We say "stub fabrications" and "ungrounded (withheld) claims". We never use looser words for it.</p>
+  </div>
+</section>
+
+<!-- S9 Custody -->
+<section id="custody">
+  <div class="wrap">
+    <h2>The diary that cannot be edited</h2>
+    <p class="lead">Append-only, hash-chained, enforced by the database itself. A Postgres trigger assigns the sequence, timestamp, and SHA-256 chain hashes under a lock; updates and deletes are rejected at the database level; the chain head is anchored outside the database as a Prometheus metric.</p>
+    <div class="widget" id="chainWidget">
+      <div class="wtitle"><span class="lab real">REAL</span> Tamper with the chain, right here</div>
+      <p class="wsub">SHA-256 computed live in your browser. Illustrative records, the same construction as the product ledger.</p>
+      <div class="chain" id="chain"></div>
+      <div class="wbtns">
+        <button class="btn-ghost sm" id="tamperBtn">Tamper with record 3</button>
+        <button class="btn-ghost sm" id="restoreBtn">Restore</button>
+      </div>
+      <div class="verdict" id="chainStatus" aria-live="assertive"></div>
+    </div>
+    <p class="gloss">A diary where every page ends with a fingerprint of everything before it. Change one word on page 3 and every fingerprint from page 3 onward stops matching. You cannot hide the edit. The product ledger is chain_len 12, verified, tamper detected (results.json). What a hash chain cannot catch is a rewrite of the whole chain by someone with full control, which is why the chain head is anchored out of band.</p>
+  </div>
+</section>
+
+<!-- S10 Nothing is canned -->
+<section id="proof">
+  <div class="wrap">
+    <h2>Nothing is canned. Pick any seed.</h2>
+    <p class="lead">Every number moves when the seed changes. No hardcoded value survives that. This page is static; the live seed rerun runs the real engine on your own device in the interactive walkthrough.</p>
+    <a class="btn-gold" href="https://ayushtiwary-ops.github.io/paritran/app/">Run it yourself, live, in your browser</a>
+    <div class="proof-grid">
+      <div class="pcard"><h3>Judge's seed</h3><p>Type any seed and the full engine reruns; every network number moves consistently. <span class="prov">Live in the walkthrough, screenshot here.</span></p></div>
+      <div class="pcard"><h3>One-click Reproduce</h3><p>Reruns seed 42 and diffs every fresh number against the committed results.json, all rows green when they match. <span class="prov">REPLAY / screenshot; live reproduction in the walkthrough.</span></p></div>
+      <div class="pcard"><h3>Standalone prototype</h3><p>One 240-line Python file reproduces every measured metric; the one wall-clock timing varies by run. Run it on a copy so the frozen results.json is untouched. <span class="prov">REAL, results.json seed 42.</span></p></div>
+      <div class="pcard"><h3>CI gate</h3><p>191 in-container tests, including a gate that fails the build if seed-42 metrics drift and a grep that fails if any metric is hardcoded in the frontend. <span class="prov">INFRA.</span></p></div>
+    </div>
+    <figure class="shot"><picture><source srcset="assets/img/evaluation.webp" type="image/webp"><img src="assets/img/evaluation.jpg" alt="The Evaluation screen showing the Reproduce diff with all rows green against results.json." loading="lazy" width="1600" height="1029"></picture><figcaption>REAL: captured from the live product, seed-42 run.</figcaption></figure>
+  </div>
+</section>
+
+<!-- S11 Security -->
+<section id="security">
+  <div class="wrap">
+    <h2>A sealed room</h2>
+    <p class="lead">Zero egress is measured live, not asserted. The API lists its complete outbound config (exactly one endpoint, host-local Ollama) and performs a real timestamped TCP connection attempt to the internet, shown blocked live when the demo Wi-Fi is off.</p>
+    <div class="split">
+      <figure class="egress-fig">
+        <svg viewBox="0 0 420 220" role="img" aria-label="One machine containing five service boxes and host Ollama, with the outbound arrow to the internet crossed out.">
+          <rect x="8" y="8" width="300" height="204" rx="10" fill="none" stroke="#2E7273" stroke-width="2"></rect>
+          <text x="18" y="28" font-family="var(--font-mono)" font-size="11" fill="#C9D2E4">one machine, docker compose</text>
+          <g font-family="var(--font-mono)" font-size="11" fill="#FBFAF6">
+            <rect x="20" y="40" width="80" height="26" rx="4" fill="#1E3A6B"></rect><text x="30" y="57">web</text>
+            <rect x="110" y="40" width="80" height="26" rx="4" fill="#1E3A6B"></rect><text x="120" y="57">api</text>
+            <rect x="200" y="40" width="90" height="26" rx="4" fill="#1E3A6B"></rect><text x="210" y="57">postgres</text>
+            <rect x="20" y="76" width="120" height="26" rx="4" fill="#1E3A6B"></rect><text x="30" y="93">prometheus</text>
+            <rect x="150" y="76" width="90" height="26" rx="4" fill="#1E3A6B"></rect><text x="160" y="93">grafana</text>
+            <rect x="20" y="118" width="180" height="26" rx="4" fill="#2E7273"></rect><text x="30" y="135">host Ollama gemma3:4b</text>
+          </g>
+          <line x1="308" y1="110" x2="380" y2="110" stroke="#7A2E2E" stroke-width="3"></line>
+          <line x1="336" y1="96" x2="360" y2="124" stroke="#7A2E2E" stroke-width="3"></line>
+          <text x="322" y="150" font-family="var(--font-mono)" font-size="11" fill="#7A2E2E">internet: blocked</text>
+        </svg>
+        <p class="prov">REAL: the egress self-test runs in the product; this diagram describes it.</p>
+      </figure>
+      <div class="seclist">
+        <p>Six scanners (pip-audit, npm audit, Bandit, Semgrep, gitleaks, Trivy, Grype): 0 fixable criticals, accepted risks documented.</p>
+        <p>OWASP Top 10:2025 checklist mapped to concrete controls.</p>
+        <p>Role-based auth: officer, supervisor, auditor. Argon2id, per-role rate limits; only auditors can tamper-test, only supervisors can reproduce.</p>
+        <p>On-premise docker compose: 5 services, internal networks, 3 host-facing ports, clean bring-up 13 s.</p>
+        <p class="gloss">The whole system lives in one sealed room. It does not just promise it never phones the internet. It picks up the phone in front of you and shows you the line is dead.</p>
+      </div>
+    </div>
+    <figure class="shot"><picture><source srcset="assets/img/security.webp" type="image/webp"><img src="assets/img/security.jpg" alt="The Security Posture screen: scanner counts, OWASP checklist, and the live egress self-test." loading="lazy" width="1600" height="800"></picture><figcaption>REAL: captured from the live product, seed-42 run.</figcaption></figure>
+  </div>
+</section>
+
+<!-- S12 Everything -->
+<section id="everything">
+  <div class="wrap">
+    <h2>Everything in the box</h2>
+    <p class="lead">All 36 capabilities, each labelled by how it is computed. Filter by provenance.</p>
+    <div class="filters" id="featFilters">
+      <button class="fbtn active" data-f="all">All <span id="cAll"></span></button>
+      <button class="fbtn" data-f="REAL">REAL <span id="cREAL"></span></button>
+      <button class="fbtn" data-f="STUB">STUB <span id="cSTUB"></span></button>
+      <button class="fbtn" data-f="INFRA">INFRA <span id="cINFRA"></span></button>
+    </div>
+    <div class="feat-grid" id="featGrid" aria-live="polite"></div>
+    <div class="shot-strip">
+      <figure class="shot"><picture><source srcset="assets/img/discovery.webp" type="image/webp"><img src="assets/img/discovery.jpg" alt="Discovery screen: the force graph of 297 complaints collapsing into 6 networks." loading="lazy" width="1600" height="944"></picture><figcaption>REAL: seed-42 run.</figcaption></figure>
+      <figure class="shot"><picture><source srcset="assets/img/casefile.webp" type="image/webp"><img src="assets/img/casefile.jpg" alt="Case File screen: money trail, mapped sections, and the F9 panel." loading="lazy" width="1600" height="1311"></picture><figcaption>REAL: seed-42 run.</figcaption></figure>
+      <figure class="shot"><picture><source srcset="assets/img/custody.webp" type="image/webp"><img src="assets/img/custody.jpg" alt="Custody Ledger screen: hash-chained records with the tamper test." loading="lazy" width="1600" height="981"></picture><figcaption>REAL: seed-42 run.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- S13 Results -->
 <section id="results">
   <div class="wrap">
-    <h2>Measured, reproducible, honest</h2>
-    <p class="lead">Every number is produced by the method named, on synthetic ground-truth data with zero real PII, fixed seed. Scan the repository QR and reproduce it in under a minute.</p>
+    <h2>Measured results</h2>
+    <p class="lead">Every number is produced by the method named next to it, on synthetic ground-truth data with zero real PII, fixed seed 42, or measured live and logged. results.json is frozen; reproduce it with one command.</p>
+    <div class="table-wrap">
     <table>
-      <tr><th>Metric</th><th>Result</th><th>Method</th></tr>
-      <tr><td>Mule networks recovered</td><td class="m">6 of 6 from 297 complaints</td><td>community detection</td></tr>
-      <tr><td>Linkage precision / recall / F1</td><td class="m">0.957 / 0.966 / 0.962</td><td>vs known ground truth</td></tr>
-      <tr><td>Value traced to cash-out</td><td class="m">90.8%</td><td>directed-graph reachability</td></tr>
-      <tr><td>Section mapping floor</td><td>52.4%</td><td>BM25 over condensed corpus v1, untuned lexical baseline (honest floor)</td></tr>
-      <tr><td>Section mapping, full stack</td><td>38.1%</td><td>corpus v2 + InLegalBERT rerank; did not beat the floor on this set (shown, not hidden)</td></tr>
-      <tr><td>High-confidence mapping</td><td class="m">100.0% (8/8 and 15/15)</td><td>three independent paths agree; everything else routes to a human officer</td></tr>
-      <tr><td>Groundedness gate (F9)</td><td class="m">40 passed, 10 stub fabrications withheld, 0 leaked</td><td>verbatim-citation gate over a labelled deterministic stub</td></tr>
-      <tr><td>Chain of custody</td><td class="m">verified, tamper detected</td><td>SHA-256 hash chain</td></tr>
-      <tr><td>Time to packet</td><td class="m">0.045 s</td><td>end to end, wall clock, measured live</td></tr>
+      <tr><th>Metric</th><th>Result</th><th>Method</th><th>Source</th></tr>
+      <tr><td>Mule networks recovered</td><td class="m">6 of 6 from 297 complaints</td><td>community detection vs planted ground truth</td><td>results.json seed 42 &middot; REAL</td></tr>
+      <tr><td>Linkage precision / recall / F1</td><td class="m">0.957 / 0.966 / 0.962</td><td>pairwise vs known ground truth</td><td>results.json &middot; REAL</td></tr>
+      <tr><td>Value traced to cash-out</td><td class="m">90.8%</td><td>directed-graph reachability</td><td>results.json &middot; REAL</td></tr>
+      <tr><td>Section mapping floor</td><td>52.4%</td><td>BM25 over condensed corpus v1, untuned lexical baseline</td><td>results.json &middot; REAL</td></tr>
+      <tr><td>Section mapping, full stack</td><td>38.1%</td><td>corpus v2 + InLegalBERT; did not beat the floor on this set, shown not hidden</td><td>NOTES 38 &middot; REAL</td></tr>
+      <tr><td>High-confidence mapping</td><td class="m">100.0% (8/8 and 15/15)</td><td>three-path agreement; all else routes to a human officer</td><td>NOTES 38 &middot; REAL</td></tr>
+      <tr><td>Groundedness gate (F9), stub baseline</td><td class="m">40 passed, 10 stub fabrications withheld, 0 leaked</td><td>verbatim-citation gate over a labelled deterministic stub</td><td>results.json &middot; STUB</td></tr>
+      <tr><td>Groundedness gate (F9), live gemma3:4b</td><td class="m">5 passed, 1 withheld, 0 leaked</td><td>verbatim-citation gate over the local model output</td><td>NOTES 39, 47 &middot; REAL</td></tr>
+      <tr><td>Chain of custody</td><td class="m">12 records verified, tamper detected</td><td>SHA-256 hash chain</td><td>results.json &middot; REAL</td></tr>
+      <tr><td>Time to packet</td><td class="m">0.045 s</td><td>end to end, wall clock, measured live</td><td>results.json &middot; REAL</td></tr>
+      <tr><td>Guided demo, end to end</td><td class="m">34.2 s vs 90 s budget</td><td>Playwright e2e, zero console errors</td><td>NOTES 46 &middot; REAL</td></tr>
+      <tr><td>Rule-augmented NER</td><td class="m">precision 0.74, recall 1.0</td><td>planted Indian identifiers, pattern rules not a learned model</td><td>NOTES 40 &middot; REAL</td></tr>
+      <tr><td>Test suite and bring-up</td><td class="m">191 tests green, 13 s bring-up</td><td>in-container pytest + vitest + Playwright</td><td>NOTES 50 &middot; INFRA</td></tr>
+      <tr><td>Security scanners</td><td class="m">6 scanners, 0 fixable criticals</td><td>pip-audit, npm, Bandit, Semgrep, gitleaks, Trivy, Grype</td><td>NOTES 43 &middot; REAL</td></tr>
     </table>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="moat">
-      <h2 style="margin-top:0">The moat</h2>
-      <p>Everyone optimises detection. The two rows nobody else ticks are the <b>Section 63 admissible packet</b> and the <b>tamper-evident custody chain</b>. Paritran owns the part that ends in a conviction. On-premise, zero egress, processes Hindi and Gujarati complaint text, and it scores accounts and money, never people.</p>
     </div>
   </div>
 </section>
 
+<!-- S13a Moat -->
+<section id="moat">
+  <div class="wrap">
+    <div class="moatbox">
+      <h2 style="margin-top:0">Everyone builds detection. We build the part that ends in a conviction.</h2>
+      <div class="moat-cards">
+        <div class="mcard"><b>Deterministic core, with abstention.</b> The numbers come from graph and rule methods that give the same answer every time, and the tool refuses to guess when its methods disagree.</div>
+        <div class="mcard"><b>The two rows nobody else ticks.</b> The Section 63 admissible packet and the tamper-evident custody chain, the parts detection tools do not produce.</div>
+        <div class="mcard"><b>Built for where the data lives.</b> On-premise, zero egress, processes Hindi and Gujarati complaint text, and it scores accounts and money, never people.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S13b Architecture -->
+<section id="architecture">
+  <div class="wrap">
+    <h2>How it is built</h2>
+    <div class="split">
+      <ul class="arch-abstract">
+        <li>React + FastAPI + Postgres, InLegalBERT and a local Gemma, all on one machine via docker compose.</li>
+        <li>A nine-stage deterministic pipeline with a fenced language layer; every drafted citation passes the F9 gate.</li>
+        <li>A database-enforced, hash-chained audit ledger with the chain head anchored out of band.</li>
+        <li>191 tests, 13 s clean bring-up, 0 fixable critical vulnerabilities.</li>
+      </ul>
+      <p class="note-line">Depth: the <a href="https://github.com/ayushtiwary-ops/paritran/blob/main/docs/Paritran_White_Paper.pdf">white paper</a> and <a href="https://github.com/ayushtiwary-ops/paritran/blob/main/docs/ARCHITECTURE.md">ARCHITECTURE.md</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S13c FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <h2>Common questions</h2>
+    <div class="faq">
+      <details><summary>Is this just a GPT wrapper?</summary><p>No. The core is deterministic graph and rule code; the model only drafts language, and every drafted citation passes the verbatim F9 gate (live: 5 passed, 1 withheld, 0 leaked).</p></details>
+      <details><summary>Is the data real?</summary><p>Fully synthetic with planted ground truth, zero real PII, seed 42. That is the only honest way to measure precision and recall against a known answer key.</p></details>
+      <details><summary>Does it integrate with CCTNS or ICJS?</summary><p>Standalone on-premise on day one, with an API-first seam documented for those interfaces as they open. Faking an integration now is a non-goal.</p></details>
+      <details><summary>What stops an adversary editing the record?</summary><p>The audit ledger is append-only and enforced by Postgres itself, the chain head is anchored outside the database, and we state plainly the one thing a hash chain cannot catch.</p></details>
+      <details><summary>Why is there no hosted server to log into?</summary><p>The product runs on-premise inside the Crime Branch by design. The interactive walkthrough runs the real engine on your own device with zero backend.</p></details>
+      <details><summary>Are any numbers hardcoded?</summary><p>Change the seed in the walkthrough and every network number moves; a CI grep fails the build if any metric is hardcoded in the frontend.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- S14 Pilot -->
 <section id="pilot">
   <div class="wrap">
     <h2>Ready to pilot with the Cyber Crime Branch</h2>
-    <p class="lead">Standalone on-premise on day one, designed to integrate with CCTNS and ICJS as those interfaces open. Built by Team Paritran: Ayush Tiwary and Aditya Arora.</p>
-    <a class="cta" href="mailto:aloolifts@gmail.com">Contact Team Paritran</a>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="flinks" style="display:flex;flex-wrap:wrap;gap:14px 22px;margin-bottom:18px;font-size:14px">
+    <p class="lead">Standalone on-premise on day one, designed to integrate with CCTNS and ICJS as those interfaces open. Built by Team Paritran: Ayush Tiwary and Aditya Arora. PS-69EEFE4F8CD1C, KANAD S.H.I.E.L.D. 2026, Category 2.</p>
+    <a class="btn-gold" href="mailto:aloolifts@gmail.com">Contact Team Paritran</a>
+    <nav class="footer-links">
       <a href="https://github.com/ayushtiwary-ops/paritran">Repository</a>
+      <a href="https://ayushtiwary-ops.github.io/paritran/app/">Interactive walkthrough</a>
       <a href="demo.html">Demo video</a>
       <a href="https://github.com/ayushtiwary-ops/paritran/blob/main/Paritran_Solution_Document.pdf">Solution document (PDF)</a>
       <a href="https://github.com/ayushtiwary-ops/paritran/blob/main/docs/Paritran_White_Paper.pdf">White paper (PDF)</a>
-      <a href="https://github.com/ayushtiwary-ops/paritran#reproducible-results-seed-42-synthetic-data">Reproduce results</a>
       <a href="https://github.com/ayushtiwary-ops/paritran/blob/main/dataset/DATASHEET.md">Dataset datasheet</a>
-    </div>
-    <div class="mono" style="color:var(--muted)">Paritran &middot; From complaint to conviction &middot; PS-69EEFE4F8CD1C &middot; KANAD S.H.I.E.L.D. 2026. Synthetic data only, zero real PII.</div>
+    </nav>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <p class="sources"><b>Sources.</b> Cyber-fraud loss about &#8377;22,845 cr 2024 (Business Standard / Lok Sabha). NCRP-to-FIR 2.43%, chargesheeting about 18%, conviction about 1.6% (NCRB; Tribune India). RBI MuleHunter (Business Standard; Medianama). Detection stack: I4C Samanvaya, the 1930 helpline.</p>
+    <p class="mono foot-line">Paritran &middot; From complaint to conviction &middot; PS-69EEFE4F8CD1C &middot; KANAD S.H.I.E.L.D. 2026. Synthetic data only, zero real PII, seed 42.</p>
+    <p class="mono foot-line">Every visual on this page is labelled REAL (computed live), STUB (deterministic stand-in, labelled), or REPLAY (recorded from a real run).</p>
   </div>
 </footer>
+
+<script src="assets/js/site.js" defer></script>
 </body>
 </html>
