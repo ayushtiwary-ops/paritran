@@ -75,7 +75,7 @@
 
 <section>
   <div class="wrap">
-    <h2>Detection is solved. Conviction is not.</h2>
+    <h2>Detection is crowded. Conviction is empty.</h2>
     <p class="lead">India catches cyber fraud and then loses it in court. The national stack handles detection and freezing. The courtroom packet, where one officer turns a stack of small complaints into a case that holds up, is empty.</p>
     <div class="cards">
       <div class="card"><div class="n serif">&#8377;22,845cr</div><div class="k">Lost to cyber fraud, 2024</div></div>
@@ -113,9 +113,12 @@
       <tr><td>Mule networks recovered</td><td class="m">6 of 6 from 297 complaints</td><td>community detection</td></tr>
       <tr><td>Linkage precision / recall / F1</td><td class="m">0.957 / 0.966 / 0.962</td><td>vs known ground truth</td></tr>
       <tr><td>Value traced to cash-out</td><td class="m">90.8%</td><td>directed-graph reachability</td></tr>
-      <tr><td>Groundedness gate (F9)</td><td class="m">10 of 50 hallucinations withheld, 0 leaked</td><td>verbatim-citation gate</td></tr>
+      <tr><td>Section mapping floor</td><td>52.4%</td><td>BM25 over condensed corpus v1, untuned lexical baseline (honest floor)</td></tr>
+      <tr><td>Section mapping, full stack</td><td>38.1%</td><td>corpus v2 + InLegalBERT rerank; did not beat the floor on this set (shown, not hidden)</td></tr>
+      <tr><td>High-confidence mapping</td><td class="m">100.0% (8/8 and 15/15)</td><td>three independent paths agree; everything else routes to a human officer</td></tr>
+      <tr><td>Groundedness gate (F9)</td><td class="m">40 passed, 10 stub fabrications withheld, 0 leaked</td><td>verbatim-citation gate over a labelled deterministic stub</td></tr>
       <tr><td>Chain of custody</td><td class="m">verified, tamper detected</td><td>SHA-256 hash chain</td></tr>
-      <tr><td>Time to packet</td><td class="m">0.048 s</td><td>end to end</td></tr>
+      <tr><td>Time to packet</td><td class="m">0.045 s</td><td>end to end, wall clock, measured live</td></tr>
     </table>
   </div>
 </section>
@@ -124,7 +127,7 @@
   <div class="wrap">
     <div class="moat">
       <h2 style="margin-top:0">The moat</h2>
-      <p>Everyone optimises detection. The two rows nobody else ticks are the <b>Section 63 admissible packet</b> and the <b>tamper-evident custody chain</b>. Paritran owns the part that ends in a conviction. On-premise, zero egress, works in Gujarati, and it scores accounts and money, never people.</p>
+      <p>Everyone optimises detection. The two rows nobody else ticks are the <b>Section 63 admissible packet</b> and the <b>tamper-evident custody chain</b>. Paritran owns the part that ends in a conviction. On-premise, zero egress, processes Hindi and Gujarati complaint text, and it scores accounts and money, never people.</p>
     </div>
   </div>
 </section>
@@ -133,12 +136,22 @@
   <div class="wrap">
     <h2>Ready to pilot with the Cyber Crime Branch</h2>
     <p class="lead">Standalone on-premise on day one, designed to integrate with CCTNS and ICJS as those interfaces open. Built by Team Paritran: Ayush Tiwary and Aditya Arora.</p>
-    <a class="cta" href="mailto:team@paritran.in">Contact Team Paritran</a>
+    <a class="cta" href="mailto:aloolifts@gmail.com">Contact Team Paritran</a>
   </div>
 </section>
 
 <footer>
-  <div class="wrap mono">Paritran &middot; From complaint to conviction &middot; PS-69EEFE4F8CD1C &middot; KANAD S.H.I.E.L.D. 2026. Synthetic data only, zero real PII.</div>
+  <div class="wrap">
+    <div class="flinks" style="display:flex;flex-wrap:wrap;gap:14px 22px;margin-bottom:18px;font-size:14px">
+      <a href="https://github.com/ayushtiwary-ops/paritran">Repository</a>
+      <a href="demo.html">Demo video</a>
+      <a href="https://github.com/ayushtiwary-ops/paritran/blob/main/Paritran_Solution_Document.pdf">Solution document (PDF)</a>
+      <a href="https://github.com/ayushtiwary-ops/paritran/blob/main/docs/Paritran_White_Paper.pdf">White paper (PDF)</a>
+      <a href="https://github.com/ayushtiwary-ops/paritran#reproducible-results-seed-42-synthetic-data">Reproduce results</a>
+      <a href="https://github.com/ayushtiwary-ops/paritran/blob/main/dataset/DATASHEET.md">Dataset datasheet</a>
+    </div>
+    <div class="mono" style="color:var(--muted)">Paritran &middot; From complaint to conviction &middot; PS-69EEFE4F8CD1C &middot; KANAD S.H.I.E.L.D. 2026. Synthetic data only, zero real PII.</div>
+  </div>
 </footer>
 </body>
 </html>
