@@ -1,0 +1,8 @@
+{
+  "source": "backend/paritran/engine/legal/authoritative/BNS_318.txt",
+  "sha256": "da2f83cc91f877bc7895ca3777aca85e4498419a0ddf02e1fb8e51b594d8e65e",
+  "section": "BNS Section 318 (Cheating)",
+  "excerpt": "Whoever, by deceiving any person, fraudulently or dishonestly induces the person so deceived to deliver any property to any person, or to consent that any person shall retain any property, or intentionally induces the person so deceived to do or omit to do anything which he would not do or omit if he were not so deceived, and which act or omission causes or is likely to cause damage or harm to that person in body, mind, reputation or property, is said to cheat.",
+  "prefilled_quote": "fraudulently or dishonestly induces the person so deceived to deliver any property",
+  "note": "Verbatim excerpt of the official India Code text. The widget runs the same whitespace-normalized, case-insensitive verbatim-containment rule the product's F9 gate enforces."
+}
