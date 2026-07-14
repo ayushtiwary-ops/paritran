@@ -30,7 +30,7 @@ Run `python3 src/paritran_prototype.py`. Every number below is written to `resul
 | Chain of custody | 12 records verified, tamper detected | SHA-256 hash chain |
 | Time to packet | ~0.05 s for 297 complaints | end to end, wall clock: measured live each run, never baseline-compared |
 
-**On the 52.4 percent.** That is BM25 lexical retrieval alone, over the condensed v1 corpus, on a deliberately untuned, natural-language test set. It is the honest floor, and it is the argument for the semantic layer: adding InLegalBERT embeddings and requiring the rule and retrieval paths to agree is the documented lift (see `src/paritran_prototype.py`, Section 5 `TODO`). We report the method, not a keyword score tuned to pass.
+**On the 52.4 percent, and the honest decomposition.** 52.4 is BM25 lexical retrieval alone, over the condensed v1 corpus, on a deliberately untuned, natural-language test set. It is the honest floor. Adding the verbatim v2 corpus and InLegalBERT reranking scores 38.1 percent on this set, below that floor, and we show that rather than hide it. The result that matters is not a single-label accuracy at all: when the three independent paths (rules, BM25, InLegalBERT) agree, measured accuracy is 100.0 percent (8/8 on golden v1, 15/15 on the extended set), and everything else is routed to a human officer, with human-routed accuracy 61.9 and 75.0 on the two sets. We report the full decomposition, including the rows where the fuller stack did not beat the baseline, not a keyword score tuned to pass.
 
 ---
 
