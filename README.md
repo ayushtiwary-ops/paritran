@@ -4,7 +4,7 @@
 
 An admissible-evidence engine for the Cyber Crime Branch. Paritran runs inside the branch, links related complaints into mule networks, reconstructs the money trail with a tamper-evident chain of custody, drafts the Section 63 certificate, and maps each offence to the right law with the statute quoted word for word. Every output passes a groundedness gate that refuses anything it cannot trace to a source. The officer reviews and signs. The engine never decides on its own. That describes the target system, specified in `SPEC.md` and built milestone by milestone; the measured slice below implements linkage, the money trail, the BM25 mapping floor, the F9 gate, and custody today, with certificate drafting and verbatim statute quoting (corpus v2) landing per the SPEC milestones.
 
-**Status:** working prototype slice, measured on synthetic data. **Data:** synthetic only, ground truth known, zero real PII. **Deployment:** on-premise, zero egress. **Seed:** 42, fully reproducible.
+**Status:** working prototype slice, measured on synthetic data. **Data:** synthetic only, ground truth known, zero real PII. **Deployment posture:** on-premise; zero egress is an operator-verified run condition, not an invariant of every host configuration. **Seed:** 42, fully reproducible.
 
 `KANAD S.H.I.E.L.D. 2026` · `PS-69EEFE4F8CD1C` · `Team Paritran`
 
@@ -12,7 +12,7 @@ An admissible-evidence engine for the Cyber Crime Branch. Paritran runs inside t
 
 ## Why this exists
 
-India catches cyber fraud and then loses it in court. People lost about ₹22,845 crore to cyber criminals in 2024. Yet only 2.43 percent of NCRP complaints became FIRs, about 18 percent of cybercrime cases reach a chargesheet, and only about 1.6 percent end in a conviction. Detection is crowded (I4C Samanvaya, the 1930 helpline, RBI MuleHunter). The courtroom packet, the part where one investigating officer turns a stack of small complaints into a case that holds up, is empty. Paritran builds that packet.
+Detection and freezing are only the beginning of a cyber-fraud investigation. The courtroom packet is the part where an investigating officer turns linked complaints, a money trail, cited law, and custody records into a reviewable case file. Paritran builds that packet while keeping the officer accountable for every decision.
 
 ---
 
@@ -27,10 +27,9 @@ Run `python3 src/paritran_prototype.py`. Every number below is written to `resul
 | Value traced to cash-out | 90.8 percent | directed-graph reachability (real trace) |
 | Section mapping accuracy | 52.4 percent | Okapi BM25 over the condensed section-description corpus (v1), untuned set |
 | Groundedness gate (F9) | 40 passed, 10 stub fabrications withheld, 0 leaked | verbatim-citation gate over a fabricating generative step (deterministic stub) |
-| Chain of custody | 12 records verified, tamper detected | SHA-256 hash chain |
-| Time to packet | ~0.05 s for 297 complaints | end to end, wall clock: measured live each run, never baseline-compared |
+| Chain of custody | verified and tamper-evident | SHA-256 hash chain |
 
-**On the 52.4 percent, and the honest decomposition.** 52.4 is BM25 lexical retrieval alone, over the condensed v1 corpus, on a deliberately untuned, natural-language test set. It is the honest floor. Adding the verbatim v2 corpus and InLegalBERT reranking scores 38.1 percent on this set, below that floor, and we show that rather than hide it. The result that matters is not a single-label accuracy at all: when the three independent paths (rules, BM25, InLegalBERT) agree, measured accuracy is 100.0 percent (8/8 on golden v1, 15/15 on the extended set), and everything else is routed to a human officer, with human-routed accuracy 61.9 and 75.0 on the two sets. We report the full decomposition, including the rows where the fuller stack did not beat the baseline, not a keyword score tuned to pass.
+**On the 52.4 percent, and the honest decomposition.** 52.4 percent is the BM25 lexical floor over the condensed v1 corpus. The result that matters is precision via abstention: when rules, BM25, and InLegalBERT agree, measured accuracy is 100 percent (8/8 on golden v1 and 15/15 on the extended set); every disagreement routes to a human officer. These are frozen benchmark results, not a claim that every future dependency version is equivalent without re-measurement.
 
 ---
 

@@ -13,3 +13,6 @@ test-results/
 playwright-report/
 /frontend/capture/
 /frontend/playwright.capture.config.ts
+.playwright-cli/
+output/
+backend/uv.lock

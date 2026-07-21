@@ -1,0 +1,28 @@
+{
+  "receipt": "PARITRAN-PUBLICATION-2026-07-22",
+  "created_at_utc": "2026-07-21T23:32:08Z",
+  "problem_statement": "PS-69EEFE4F8CD1C",
+  "claim_source_sha256": "800091205ad1e7c2a22a7add37f8d8fcfa1e5094f8737806bea56f5229fbc357",
+  "artifacts": {
+    "Paritran_Solution_Document.pdf": "4324121c5a01080ae30d96fbadb3125ac016697f53ae52ad0837c20140e1a9e3",
+    "docs/Paritran_White_Paper.pdf": "cbeed4af056d55867c8840c9f93bfcfd8c09dd2dd6b57d3c1989d0ff93edbd92",
+    "docs/index.html": "8346ce47060f1ee6f079b5e2e734688bbb6f32f15fb0df89b4167ddd5c589e71",
+    "scripts/site/allowlist_numbers.json": "a2599fdff2ab1059215865c3fe6f527ed6cf46ae025d3bb95f44b577b1e61300",
+    "backend/requirements.txt": "50a01027fcdb2276a942ff2bec2c1193f6934a14edfeaf371495efe220375601"
+  },
+  "verification": {
+    "backend_exact_dependency_stack": "150 passed, 46 skipped",
+    "semantic_stack": "torch 2.13.0, transformers 5.14.1, cached InLegalBERT test passed",
+    "frontend_production_build": "PASS",
+    "site_claim_gate": "PASS, 36 distinct visible HTML tokens allowlisted",
+    "pip_audit": "PASS, no known vulnerabilities",
+    "npm_audit": "PASS, no vulnerabilities",
+    "bandit_high": "PASS, zero high findings",
+    "semgrep": "PASS, zero findings",
+    "gitleaks": "PASS, no leaks",
+    "trivy_critical": "PASS, zero critical findings in scanned dependency manifests",
+    "pdf_visual_review": "PASS, 6-page solution document and 7-page white paper",
+    "browser_render": "PASS, local Chromium render and accessibility snapshot"
+  },
+  "truth_boundary": "Synthetic benchmark only. Real deployment, external institution validation, production admissibility and live CCTNS or ICJS integration remain TODO-VERIFY."
+}

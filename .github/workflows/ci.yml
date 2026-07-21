@@ -76,20 +76,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      # Each --ignore-vuln below is an accepted risk documented with
-      # owner and rationale in docs/SECURITY.md section 6 (torch and
-      # transformers pins frozen for the seed-42 measurement contract;
-      # several have no upstream fix). Any NEW advisory still fails.
+      # Audit the currently shipped dependency set without advisory
+      # suppressions. Frozen historical measurements are provenance, not a
+      # reason to ship a dependency version with a published fix available.
       - name: Audit backend dependencies
         run: |
-          pip install pip-audit==2.9.0
-          pip-audit -r backend/requirements.txt \
-            --ignore-vuln PYSEC-2026-139 \
-            --ignore-vuln CVE-2025-3000 \
-            --ignore-vuln CVE-2025-3001 \
-            --ignore-vuln PYSEC-2025-217 \
-            --ignore-vuln CVE-2026-1839 \
-            --ignore-vuln CVE-2026-4372
+          pip install pip-audit==2.10.1
+          pip-audit -r backend/requirements.txt
 
   gitleaks:
     runs-on: ubuntu-latest

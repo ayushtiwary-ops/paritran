@@ -1,0 +1,8 @@
+{
+  "canonical_source": "KANAD_SHIELD_2026_02_SOLUTION_DOSSIER.md",
+  "canonical_source_sha256": "800091205ad1e7c2a22a7add37f8d8fcfa1e5094f8737806bea56f5229fbc357",
+  "scope": "Part B: Team Paritran, Category 2 entry",
+  "site_allowlist": "scripts/site/allowlist_numbers.json",
+  "site_allowlist_sha256": "a2599fdff2ab1059215865c3fe6f527ed6cf46ae025d3bb95f44b577b1e61300",
+  "boundary": "Performance, scale, F9, NER, custody and build-state claims must match File 2. Structural identifiers such as law sections, algorithm names, event year and pipeline labels are not performance claims."
+}

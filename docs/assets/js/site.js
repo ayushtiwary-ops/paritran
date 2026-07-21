@@ -130,13 +130,12 @@
         Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
         if (txt != null) el.textContent = txt; svg.appendChild(el); return el;
       }
-      function rupees(v) { return "Rs " + (v / 100000).toFixed(1) + "L"; }
       add("text", { x: 6, y: 16, fill: "#6B685E", "font-family": "var(--font-mono)", "font-size": 11 },
-        n.victims.count + " victims traced through network " + n.id);
+        "illustrative path from victims to cash-out");
       // columns: victims, L1, L2, cash
       var cols = [
-        { x: 20, label: "victims", sub: rupees(n.victims.total) },
-        { x: 150, label: n.l1_count + " L1 mules", sub: "" },
+        { x: 20, label: "victims", sub: "" },
+        { x: 150, label: "mule layer", sub: "" },
         { x: 270, label: "L2 account", sub: "" },
         { x: 370, label: "cash-out", sub: "" }
       ];
@@ -149,11 +148,11 @@
         add("line", { x1: x1, y1: 113, x2: x2, y2: 113, stroke: broken ? "#7A2E2E" : "#2D6A4F", "stroke-width": broken ? 3 : 2, "stroke-dasharray": broken ? "5 4" : "0" });
         add("text", { x: (x1 + x2) / 2, y: 106, "text-anchor": "middle", fill: broken ? "#7A2E2E" : "#2D6A4F", "font-family": "var(--font-mono)", "font-size": 9 }, amount);
       }
-      hop(66, 150, false, rupees(n.victims.total));
+      hop(66, 150, false, "verified hop");
       hop(196, 270, n.hops.some(function (h) { return h.to.indexOf("L2") >= 0 && h.broken; }), "");
       hop(316, 370, n.hops[n.hops.length - 1].broken, "");
       add("text", { x: 6, y: 230, fill: "#2D6A4F", "font-family": "var(--font-mono)", "font-size": 11 },
-        "this network: " + n.traced_pct_this_network + "% traced to cash-out");
+        "path shown as a replay; canonical overall result appears beside it");
     }).catch(function () {});
   })();
 
@@ -248,8 +247,8 @@
     ["Verbatim bare-act corpus", "Official India Code text committed with checksums; a test proves every quote is real.", "REAL"],
     ["F9 groundedness gate", "Every citation checked word for word; invented or paraphrased ones withheld, 0 leaked.", "REAL"],
     ["Plant-a-fabrication control", "Injects a fake citation through the real gate; the gate blocks it live.", "REAL"],
-    ["Live local LLM generation", "gemma3:4b drafts citations on the local machine; 5 passed, 1 withheld, 0 leaked.", "REAL"],
-    ["Labelled deterministic stub", "Fabricates on purpose so the gate is demonstrable off the model (50/40/10/0).", "STUB"],
+    ["Live local LLM generation", "Local gemma drafts citations; 5 passed, 1 withheld, 0 leaked in the frozen run.", "REAL"],
+    ["Labelled deterministic stub", "Fabricates on purpose; 40 passed, 10 withheld, 0 leaked.", "STUB"],
     ["Section 63 packet assembly", "Court packet: hashes, network, money trail, verbatim quotes, F9 audit, chain head.", "REAL"],
     ["BSA 63(4) certificate", "Pre-fills the two-part certificate; signature blocks stay blank; print to PDF.", "REAL"],
     ["DB-enforced audit ledger", "A Postgres trigger assigns seq, timestamp and SHA-256 hashes; updates and deletes rejected.", "REAL"],
@@ -264,14 +263,14 @@
     ["PDF/scan OCR ingest", "Reads a text layer, falls back to Tesseract for scans, hashes the file on intake.", "REAL"],
     ["Synthetic case generator", "Builds 297 complaints across 6 planted syndicates with zero real PII.", "REAL"],
     ["Role-based auth", "Officer, supervisor, auditor with Argon2id and per-role rate limits.", "REAL"],
-    ["Security posture panel", "Live output of six scanners plus an OWASP Top 10:2025 checklist.", "REAL"],
-    ["Zero egress measured", "Lists the one outbound endpoint and runs a live TCP self-test, blocked Wi-Fi off.", "REAL"],
-    ["Guided demo mode", "One button paces a five-beat story over the real engine in a measured 34.2 s.", "REAL"],
-    ["System Status widget", "Live db, Ollama and model health plus a p50/p95 latency sparkline.", "REAL"],
-    ["Prometheus + Grafana", "An 8-panel dashboard; the audit chain head is exported as a metric.", "INFRA"],
+    ["Security posture panel", "Shows scanner gates, mapped controls, and the operator-run egress check.", "REAL"],
+    ["Offline posture check", "Lists configured outbound endpoints and records the operator-run network check.", "REAL"],
+    ["Guided demo mode", "One button paces the demonstration over the real engine.", "REAL"],
+    ["System Status widget", "Shows database, local model, and service health with latency history.", "REAL"],
+    ["Prometheus + Grafana", "Operational dashboards expose health and the audit-chain head.", "INFRA"],
     ["Command palette", "Keyboard palette jumps to any screen or starts a run without the mouse.", "REAL"],
-    ["On-premise docker stack", "Five services from one command in 13 s; only three ports face the host.", "INFRA"],
-    ["Standalone prototype slice", "One 240-line Python file reproduces every measured metric.", "REAL"],
+    ["On-premise docker stack", "A single command starts the local service stack with explicit host ports.", "INFRA"],
+    ["Standalone prototype slice", "A compact Python entry point reproduces the canonical synthetic metrics.", "REAL"],
     ["191-test suite", "In-container pytest, vitest and Playwright with a reproduction gate and a truth grep.", "INFRA"],
     ["Honest degradation", "If a model is down the run completes with an explicit degraded flag, never silent.", "REAL"]
   ];

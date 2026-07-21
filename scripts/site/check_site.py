@@ -7,13 +7,14 @@ Add --list to print every number token found (used to build the allowlist).
 Checks:
   - banned vocabulary and the word "hallucination" absent
   - "team@paritran.in", "0.048", em dash (U+2014) absent
-  - required strings present (0.045, contact, stub fabrications, seed 42, anchors, /app/ link, demo link)
+  - required strings present (contact, stub fabrications, seed 42, anchors, /app/ link, demo link)
   - every number token in the rendered text is in allowlist_numbers.json
   - "100.0" only within 120 chars of both "8/8" and "15/15"
   - REAL/STUB/REPLAY/INFRA labels present (>= number of metric figures)
   - file-size budgets (html/css/js/fonts, initial-load sum)
 """
 import html as htmllib
+import hashlib
 import json
 import os
 import re
@@ -23,7 +24,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 DOCS = os.path.join(REPO, "docs")
 INDEX = os.path.join(DOCS, "index.html")
+SITE_JS = os.path.join(DOCS, "assets", "js", "site.js")
 ALLOW = os.path.join(HERE, "allowlist_numbers.json")
+ALLOW_SHA256 = "a2599fdff2ab1059215865c3fe6f527ed6cf46ae025d3bb95f44b577b1e61300"
 
 BANNED = ["cutting-edge", "cutting edge", "revolutionary", "seamless", "ai-powered", "ai powered",
           "disruptive", "game-changer", "game changer", "transformative", "world-class", "world class",
@@ -61,6 +64,7 @@ def number_tokens(text):
 
 def main():
     raw = open(INDEX, encoding="utf-8").read()
+    site_js = open(SITE_JS, encoding="utf-8").read()
     text = rendered_text(raw)
     low = raw.lower()
 
@@ -81,9 +85,14 @@ def main():
     for bad in ["team@paritran.in", "0.048"]:
         if bad in low:
             fail(f"must-be-absent token present: {bad!r}")
+    for bad in ["22,845", "2.43%", "1.6%", "34.2", "0.045", "38.1",
+                "61.9", "75.0", "240-line", "13 s", "50/40/10/0",
+                "gemma3:4b"]:
+        if bad in raw or bad in site_js:
+            fail(f"withdrawn or ungoverned public claim present: {bad!r}")
 
     # 2. required strings
-    required = ["0.045", "aloolifts@gmail.com", "stub fabrications", "seed 42",
+    required = ["aloolifts@gmail.com", "stub fabrications", "seed 42",
                 'id="results"', 'id="pilot"',
                 'https://ayushtiwary-ops.github.io/paritran/app/', 'href="demo.html"']
     for r in required:
@@ -95,6 +104,12 @@ def main():
         fail("allowlist_numbers.json missing")
         allow = {}
     else:
+        actual_allow_digest = hashlib.sha256(open(ALLOW, "rb").read()).hexdigest()
+        if actual_allow_digest != ALLOW_SHA256:
+            fail(
+                "allowlist_numbers.json digest mismatch: "
+                f"expected {ALLOW_SHA256}, got {actual_allow_digest}"
+            )
         allow = json.load(open(ALLOW, encoding="utf-8"))
     allow_keys = set(allow.keys())
     orphans = {}

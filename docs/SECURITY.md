@@ -132,17 +132,17 @@ integrity, credentials in `.env`, the evidence packet outputs.
 
 ## 6. Accepted risks and triaged findings
 
-Zero-criticals gate: no critical findings exist that a dependency bump
-can fix. Everything below is either unfixable upstream today or a
-triaged non-issue, each with an owner and rationale. Owner for all
-rows: Ayush Tiwary (founder). Review cadence: every scan run, and any
-row loses its acceptance the moment an upstream fix ships.
+Zero-criticals gate: no critical finding with an available dependency fix
+is accepted. The Python dependency audit has no advisory suppressions.
+Frozen historical measurements retain their environment as provenance, but
+the shipped runtime moves to patched dependencies and must be re-measured
+before a new runtime result is presented as equivalent. Owner for residual
+rows: Ayush Tiwary (founder). Review cadence: every scan run.
 
 | Finding | Source | Severity | Rationale for acceptance | Planned close |
 |---|---|---|---|---|
 | CVE-2026-58016 (libglib2.0-0t64), CVE-2026-42496 and CVE-2026-8376 (perl-base) in the api image base (debian 13.5, python:3.11-slim) | trivy image | 3 critical | No fixed Debian package published (`fixed: none` in the artifact). perl and glib are base-image content the app never invokes; the api container is not WAN-exposed (internal network, localhost-published port, demo runs offline) | Rebuild on every base-image refresh; re-scan picks up fixes automatically |
-| transformers 4.57.6: CVE-2026-4372 (high, fix in 5.3.0), CVE-2026-1839 (medium, fix in 5.0.0rc3), PYSEC-2025-217 (no fix) | pip-audit, trivy fs, grype | 1 high, 1 medium, 1 unrated | Fix requires the transformers 4 to 5 major bump, which changes the InLegalBERT load path and risks the frozen seed-42 measurement contract days before the demo. The library only loads a local, read-only, pre-verified model snapshot; no remote model or user-supplied weights are ever loaded | Scheduled major-bump + re-measurement after the hackathon, before any pilot |
-| torch 2.9.1: CVE-2025-3001 (low, fix in 2.10.0), CVE-2025-3000 and PYSEC-2026-139 (low/unrated, no fix) | pip-audit, trivy fs, grype | low | Same baseline-stability reasoning; both scored low; torch.load is never called on untrusted input | Same window as the transformers bump |
+| Historical seed-42 legal-mapping environment used torch 2.9.1 and transformers 4.57.6 | provenance record | historical only | Published benchmark values remain tied to that frozen environment. The shipped runtime now pins torch 2.13.0 and transformers 5.14.1; equivalence is not claimed until the frozen benchmark is re-run | Re-run legal benchmark and publish a new signed result before claiming runtime equivalence |
 | B615 from_pretrained without revision pin (`backend/paritran/engine/legal/semantic.py`) | bandit | 2 medium | Triaged false positive: the path is the local read-only mount `/models/InLegalBERT` (SPEC 4), never the Hugging Face Hub; offline demo cannot download anything. The snapshot hash is recorded in NOTES.md item 3 | Add an explicit local-files-only assertion during the M10 polish pass |
 | B311 `random` in synthetic data generation (`backend/paritran/engine/synthetic.py`) | bandit | 2 low | By design: seeded deterministic PRNG is the reproducibility contract for synthetic data (truth rule 4); nothing cryptographic derives from it | None (working as specified) |
 | sqlalchemy-execute-raw-query (`backend/paritran/db/migrate.py`) | semgrep | 1 high (rule grade) | Triaged false positive: the migration runner executes the repo's own committed `.sql` files over the admin connection at startup; no user input reaches it, and it is not sqlalchemy | None (rule mismatch documented here) |
