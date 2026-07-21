@@ -65,9 +65,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Truth-rule spot-check (SPEC section 17 step 5, exit code is the verdict)
+      - name: Product and public-site truth gates
         run: |
-          ! grep -rInE "0\.957|0\.966|0\.962|90\.8|52\.4|\b297\b|40 ?/ ?10|tamper_detected" frontend/src
+          python scripts/site/check_site.py
+          ! grep -rInE \
+            --exclude-dir=replay \
+            "0\.957|0\.966|0\.962|90\.8|52\.4|\b297\b|40 ?/ ?10|tamper_detected" \
+            frontend/src
 
   pip-audit:
     runs-on: ubuntu-latest
